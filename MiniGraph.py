@@ -6,6 +6,7 @@ import Gui
 def miniGraphThread(graph, component, miniGraphUsageList):
     if component == "CPU":
         miniGraphUsageList.append(psutil.cpu_percent())
+        Gui.cpuPercentagePerCore.append(psutil.cpu_percent(percpu=True))
         Gui.cpuPercentage = miniGraphUsageList
     elif component == "GPU":
         ...
@@ -29,7 +30,7 @@ def miniGraphThread(graph, component, miniGraphUsageList):
                               Gui.miniGraphDefaultHeight - Gui.miniGraphDefaultHeight / 100 * miniGraphUsageList[i],
                               positionX - Gui.miniGraphDefaultWidth / 30,
                               Gui.miniGraphDefaultHeight - Gui.miniGraphDefaultHeight / 100 * miniGraphUsageList[i - 1],
-                              fill='#73e02f', width=2)
+                              fill='#549401', width=2)
             positionX -= Gui.miniGraphDefaultWidth / 30
             i -= 1
     time.sleep(1)

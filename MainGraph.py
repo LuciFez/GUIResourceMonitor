@@ -1,44 +1,109 @@
 from tkinter import *
+import psutil
+import threading
+import MainCPUThread
+import Gui
 
 mainGraphDefaultWidth = 600
-mainGraphDefaultHeight = 500
+mainGraphDefaultHeight = 200
 
-def onOpen(graph):
-    mainGraph = Canvas(graph, width=mainGraphDefaultWidth, height=mainGraphDefaultHeight, bg="white")
-    mainGraph.grid(row=0,column=0)
-    drawGraphDetails(mainGraph,"CPU")
+cpu = False
+gpu = False
+ram = False
+hdd = False
+net = False
 
+class AppClass:
+    def __init__(self, graph):
+        self.drawCPUGraph(graph)
 
-def drawGraphDetails(graph,component):
-    graph.create_text(mainGraphDefaultWidth-35, 10, fill="darkblue", font="Times 10 italic bold", text=f"{component} Usage")
-    positionY = 0
-    while positionY < mainGraphDefaultHeight:
-        if positionY!=0 and positionY!= mainGraphDefaultHeight:
-            graph.create_line(30,positionY,mainGraphDefaultWidth,positionY,fill='gray')
-            graph.create_text(20, positionY, fill="darkblue", font="Times 10 italic bold", text=str(int(100-positionY / mainGraphDefaultHeight * 100)))
-        positionY += mainGraphDefaultHeight/10
+    def drawCPUGraph(self, graph):
+        #big graph
+        self.mainGraph = Canvas(graph, width=mainGraphDefaultWidth, height=mainGraphDefaultHeight, bg="white",
+                           highlightthickness=1, highlightbackground="#5CA6D0")
+        self.mainGraph.grid(row=0, column=0)
+        self.drawGraphDetails(self.mainGraph, "CPU")
 
-def drawCPUGraph(graph,text):
-    mainGraph = Canvas(graph, width=mainGraphDefaultWidth, height=mainGraphDefaultHeight, bg="white")
-    mainGraph.grid(row=0, column=0)
-    drawGraphDetails(mainGraph, text)
+        #containter mini graphs
+        self.miniCPUs = LabelFrame(graph, padx=0, pady=0, bd=0, highlightthickness=0,bg="white")
+        self.miniCPUs.grid(row=1, column=0)
 
-"""
-def mainGraphThread(graph,component):
- mainGraphUsageList.append(psutil.cpu_percent())
- print(mainGraphUsageList[len(mainGraphUsageList) - 1])
- if len(mainGraphUsageList)>1:
-     i = len(mainGraphUsageList)-1
-     positionX=Gui.mainGraphDefaultWidth
-     while(i>1):
-         if len(mainGraphUsageList)>30 and i < len(mainGraphUsageList)-30:
-             break
-         graph.create_line(positionX, Gui.mainGraphDefaultHeight - Gui.mainGraphDefaultHeight/100 * mainGraphUsageList[i],
-                           positionX-Gui.mainGraphDefaultWidth/30,Gui.mainGraphDefaultHeight - Gui.mainGraphDefaultHeight/100 * mainGraphUsageList[i-1],fill='#73e02f',width=3)
-         positionX -= Gui.mainGraphDefaultWidth/30
-         i-= 1
-     graph.create_text(Gui.mainGraphDefaultWidth-35, 20, fill="darkblue", font="Times 10 italic bold", text=str(mainGraphUsageList[len(mainGraphUsageList)-1]))
- time.sleep(1)
- graph.delete("all")
- Gui.drawGraphDetails(graph,component)
- mainGraphThread(graph,component)"""
+        #mini graphs Canvas
+        self.miniCPUsRow1 = LabelFrame(self.miniCPUs, padx=0, pady=0, bd=0, highlightthickness=0,bg="white")
+        self.miniCPUsRow1.grid(row=0, column=0)
+        #mini graphs info
+        self.miniCPUsRow2 = LabelFrame(self.miniCPUs, padx=0, pady=0, bd=0, highlightthickness=0,bg="white")
+        self.miniCPUsRow2.grid(row=1, column=0)
+
+        #draw mini graphs Canvas
+        nbCPUs = psutil.cpu_count(logical=False)
+        self.miniCPUsList = []
+        for index in range(0, nbCPUs):
+            if index > nbCPUs / 2 - 1:
+                row2 = Canvas(self.miniCPUsRow2, width=mainGraphDefaultWidth / nbCPUs * 2 - 10,
+                              height=mainGraphDefaultHeight / 2 - 10, bg="white", bd=0, highlightthickness=1,
+                              highlightbackground="#5CA6D0")
+                row2.grid(row=1, column=int(index - nbCPUs / 2), padx=5, pady=5)
+                self.miniCPUsList.append(row2)
+                self.drawMiniCPUsDetails(row2, index + 1)
+            else:
+                row1 = Canvas(self.miniCPUsRow1, width=mainGraphDefaultWidth / nbCPUs * 2 - 10,
+                              height=mainGraphDefaultHeight / 2 - 10, bg="white", bd=0, highlightthickness=1,
+                              highlightbackground="#5CA6D0")
+                row1.grid(row=0, column=int(index), padx=5, pady=5)
+                self.miniCPUsList.append(row1)
+                self.drawMiniCPUsDetails(row1, index + 1)
+
+        #full CPU info
+        cpuDetailsFrame = LabelFrame(graph, padx=0, pady=0, bd=0, highlightthickness=0, bg="white")
+        cpuDetailsFrame.grid(row=2, column=0)
+        self.speedFullCPU = Label(cpuDetailsFrame, text="CPU speed: "+str(Gui.cpuPercentage[len(Gui.cpuPercentage)-1]), width = 20, bg="white", bd=0, highlightthickness=0,anchor='w')
+        self.speedFullCPU.grid(row=0, column=0)
+
+        #each core speed info
+        self.speedList = []
+        for index in range(0, nbCPUs):
+            if index > nbCPUs / 2 - 1:
+                speed = Label(cpuDetailsFrame, text="Core " + str(index+1) + " speed: "+str(Gui.cpuPercentagePerCore[len(Gui.cpuPercentagePerCore)-1][index]), width = 20, bg="white", bd=0, highlightthickness=0,
+                              padx=10, pady=5,anchor='w')
+                speed.grid(row=2, column=int(index - nbCPUs / 2))
+                self.speedList.append(speed)
+            else:
+                speed = Label(cpuDetailsFrame, text="Core " + str(index+1) + " speed: "+str(Gui.cpuPercentagePerCore[len(Gui.cpuPercentagePerCore)-1][index]), width = 20, bg="white", bd=0, highlightthickness=0,
+                              padx=10, pady=5,anchor='w')
+                speed.grid(row=1, column=int(index))
+                self.speedList.append(speed)
+
+        self.cpuThread = threading.Thread(target=MainCPUThread.cpuThread, args=(self.mainGraph, self.miniCPUsList,self.speedFullCPU, self.speedList,Gui.cpuPercentage, Gui.cpuPercentagePerCore), daemon=True)
+        self.cpuThread.start()
+
+    def drawGPUGraph(self, graph, text):
+        ...
+    def drawRAMGraph(self, graph, text):
+        ...
+    def drawHDDGraph(self, graph, text):
+        ...
+    def drawNETGraph(self, graph, text):
+        ...
+
+    def drawMiniCPUsDetails(self, cpu, index):
+        cpu.create_text((mainGraphDefaultHeight) - 25, 5, fill="#72B2D6", font="Times 6 italic bold",
+                        text=f"CPU {index}")
+        positionY = 0
+        while positionY < (mainGraphDefaultHeight / 2 - 10):
+            if positionY != 0 and positionY != mainGraphDefaultHeight:
+                cpu.create_line(20, positionY, mainGraphDefaultWidth, positionY, fill='#E6F1F8')
+                cpu.create_text(10, positionY, fill="#72B2D6", font="Times 6 italic bold",
+                                text=str(int(100 - positionY / (mainGraphDefaultHeight / 2 - 10) * 100)))
+            positionY += (mainGraphDefaultHeight / 2 - 10) / 10
+
+    def drawGraphDetails(self, graph, component):
+        graph.create_text(mainGraphDefaultWidth - 35, 10, fill="#72B2D6", font="Times 10 italic bold",
+                          text=f"{component} Usage")
+        positionY = 0
+        while positionY < mainGraphDefaultHeight:
+            if positionY != 0 and positionY != mainGraphDefaultHeight:
+                graph.create_line(30, positionY, mainGraphDefaultWidth, positionY, fill='#E6F1F8')
+                graph.create_text(15, positionY, fill="#72B2D6", font="Times 10 italic bold",
+                                  text=str(int(100 - positionY / mainGraphDefaultHeight * 100)))
+            positionY += mainGraphDefaultHeight / 10
