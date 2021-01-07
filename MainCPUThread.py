@@ -68,7 +68,7 @@ def cpuThread(mainGraphCanvas, miniCPUsCanvasList, fullSpeedCPULabel, eachCoreLa
         time.sleep(1)
         cpuThread(mainGraphCanvas, miniCPUsCanvasList, fullSpeedCPULabel, eachCoreLabelList, speedList, speedListPerCPU)
     else:
-        print("Stopped the thread")
+        print("Stopped the thread CPU")
 
 
 def drawMiniCPUsDetails(cpu, index):

@@ -1,7 +1,7 @@
 import psutil
 import time
 import Gui
-
+from psutil._common import bytes2human
 
 def miniGraphThread(graph, component, miniGraphUsageList):
     if component == "CPU":
@@ -12,7 +12,9 @@ def miniGraphThread(graph, component, miniGraphUsageList):
         ...
     elif component == "RAM":
         miniGraphUsageList.append(psutil.virtual_memory().percent)
-        Gui.ramPercentage = miniGraphUsageList
+        Gui.ramPercentage.append(psutil.virtual_memory().percent)
+        Gui.ramAvailable.append(bytes2human(psutil.virtual_memory().available))
+        Gui.ramUsed.append(bytes2human(psutil.virtual_memory().used))
     elif component == "HDD":
         # used disk percent
         # print(psutil.disk_usage('/').percent)

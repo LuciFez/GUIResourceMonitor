@@ -1,6 +1,4 @@
 import sys
-import turtle as t
-import main
 import time
 import threading
 import MainGraph
@@ -17,7 +15,11 @@ cpuPercentage = []
 cpuPercentagePerCore = []
 
 gpuPercentage = []
+
 ramPercentage = []
+ramAvailable = []
+ramUsed = []
+
 hddPercentage = []
 netPercentage = []
 
@@ -158,7 +160,7 @@ class Gui(Canvas):
             self.previousComponent = self.ram
             for widget in graph.winfo_children():
                 widget.destroy()
-            self.mainGraph.drawCPUGraph(graph)
+            self.mainGraph.drawRAMGraph(graph)
 
     def showHDD(self, event, graph):
         if self.previousComponent is self.hdd:
