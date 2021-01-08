@@ -141,12 +141,14 @@ class AppClass:
 
 
     def drawHDDGraph(self, graph):
-        self.barCanvas = Canvas(graph,width=mainGraphDefaultWidth,height=mainGraphDefaultHeight, bg="white", bd=0, highlightthickness=0)
+        self.barCanvas = Canvas(graph,width=mainGraphDefaultWidth,height=mainGraphDefaultHeight+100, bg="white", bd=0, highlightthickness=0)
         self.barCanvas.grid(row=0,column=0,padx=3,pady=3)
-        self.barCanvas.create_line(0,mainGraphDefaultWidth,mainGraphDefaultWidth,mainGraphDefaultHeight)
+        self.barCanvas.create_line(0,mainGraphDefaultWidth,mainGraphDefaultWidth,mainGraphDefaultHeight+100)
         numberPartitions = len(psutil.disk_partitions(all=True))
+        partitions = psutil.disk_partitions(all=True)
         for i in range(0,numberPartitions):
-            self.barCanvas.create_rectangle(mainGraphDefaultWidth/(numberPartitions+1)*(i+1) - 20,0,mainGraphDefaultWidth/(numberPartitions+1)*(i+1) + 20,mainGraphDefaultHeight-1)
+            self.barCanvas.create_rectangle(mainGraphDefaultWidth/(numberPartitions+1)*(i+1) - 20,0,mainGraphDefaultWidth/(numberPartitions+1)*(i+1) + 20,mainGraphDefaultHeight+100-20,outline="#549401")
+            self.barCanvas.create_text(mainGraphDefaultWidth/(numberPartitions+1)*(i+1),mainGraphDefaultHeight+100-6,fill="black",font="TkDefaultFont 12",text=str(partitions[i].device[:1]))
 
 
     def drawNETGraph(self, graph, text):
