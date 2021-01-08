@@ -20,14 +20,20 @@ def miniGraphThread(graph, component, miniGraphUsageList):
         percent = []
         used = []
         free= []
+        availableSpace = 0
+        usedSpace = 0
         for p in psutil.disk_partitions(all = True):
             details = psutil.disk_usage(p.device)
             percent.append(details.percent)
-            used.append(details.used)
-            free.append(details.free)
+            used.append(details.used/1024/1024/1024)
+            free.append(details.free/1024/1024/1024)
+            usedSpace += details.used/1024/1024/1024
+            availableSpace += details.free/1024/1024/1024
+
         Gui.hddPercentage.append(percent)
         Gui.hddUsed.append(used)
         Gui.hddFree.append(free)
+        miniGraphUsageList.append(usedSpace*100/(usedSpace+availableSpace))
     elif component == "NET":
         ...
     if len(miniGraphUsageList) > 1:
