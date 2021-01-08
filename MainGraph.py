@@ -141,8 +141,9 @@ class AppClass:
         self.ramThread.start()
 
 
-    def drawHDDGraph(self, graph, text):
-        ...
+    def drawHDDGraph(self, graph):
+        print(psutil.disk_partitions())
+        print(psutil.disk_usage('/'))
 
     def drawNETGraph(self, graph, text):
         ...

@@ -180,7 +180,7 @@ class Gui(Canvas):
             self.previousComponent = self.hdd
             for widget in graph.winfo_children():
                 widget.destroy()
-            self.mainGraph.drawCPUGraph(graph)
+            self.mainGraph.drawHDDGraph(graph)
 
     def showNET(self, event, graph):
         if self.previousComponent is self.net:
