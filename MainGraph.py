@@ -118,8 +118,7 @@ class AppClass:
         self.ramBar.create_text(40,mainGraphDefaultHeight / 14+1,fill="#549401",font="TkDefaultFont 8",text=str(Gui.ramPercentage[len(Gui.ramPercentage)-1])+" % used")
         self.ramBar.grid(row=0, column=1, padx=7, pady=10)
         # details label
-        self.detailsRamLabel = LabelFrame(graph, bg="white",
-                                          bd=0, highlightthickness=0)
+        self.detailsRamLabel = LabelFrame(graph, bg="white",bd=0, highlightthickness=0)
         self.detailsRamLabel.grid(row=2, column=0)
         # total ram
         self.totalRam = Label(self.detailsRamLabel,
@@ -142,8 +141,13 @@ class AppClass:
 
 
     def drawHDDGraph(self, graph):
-        print(psutil.disk_partitions())
-        print(psutil.disk_usage('/'))
+        self.barCanvas = Canvas(graph,width=mainGraphDefaultWidth,height=mainGraphDefaultHeight, bg="white", bd=0, highlightthickness=0)
+        self.barCanvas.grid(row=0,column=0,padx=3,pady=3)
+        self.barCanvas.create_line(0,mainGraphDefaultWidth,mainGraphDefaultWidth,mainGraphDefaultHeight)
+        numberPartitions = len(psutil.disk_partitions(all=True))
+        for i in range(0,numberPartitions):
+            self.barCanvas.create_rectangle(mainGraphDefaultWidth/2/numberPartitions - 20,0,mainGraphDefaultWidth/2/numberPartitions + 20,mainGraphDefaultHeight-1)
+
 
     def drawNETGraph(self, graph, text):
         ...
