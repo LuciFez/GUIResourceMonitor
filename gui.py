@@ -22,6 +22,8 @@ ramUsed = []
 
 hddPercentage = []
 hddPartitionNumber = -1
+diskRead = []
+diskWrite = []
 hddUsed = []
 hddFree = []
 

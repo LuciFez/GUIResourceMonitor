@@ -34,10 +34,19 @@ def miniGraphThread(graph, component, miniGraphUsageList):
         Gui.hddUsed.append(used)
         Gui.hddFree.append(free)
 
-        io_counters = psutil.Process().io_counters()
-        disk_io_counter = psutil.disk_io_counters()
+        ioCounter = psutil.disk_io_counters(perdisk=True, nowrap=True)
+        readList = []
+        writeList = []
+        for i in ioCounter:
+            readList.append(ioCounter[i][2])
+            writeList.append(ioCounter[i][3])
 
-        miniGraphUsageList.append((io_counters[2] + io_counters[3]) / (disk_io_counter[2]+disk_io_counter[3])*100)
+        Gui.diskRead.append(readList)
+        Gui.diskWrite.append(writeList)
+        a = (readList[0]-Gui.diskRead[len(Gui.diskRead)-2][0])/1000000
+        b = (writeList[0]-Gui.diskWrite[len(Gui.diskWrite)-2][0])/1000000
+        print("read: "+str(a)+" write: "+str(b))
+        miniGraphUsageList.append(usedSpace*100/(usedSpace+availableSpace))
 
 
 
