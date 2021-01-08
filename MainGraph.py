@@ -149,6 +149,7 @@ class AppClass:
         for i in range(0,numberPartitions):
             self.barCanvas.create_rectangle(mainGraphDefaultWidth/(numberPartitions+1)*(i+1) - 20,0,mainGraphDefaultWidth/(numberPartitions+1)*(i+1) + 20,mainGraphDefaultHeight+100-20,outline="#549401")
             self.barCanvas.create_text(mainGraphDefaultWidth/(numberPartitions+1)*(i+1),mainGraphDefaultHeight+100-6,fill="black",font="TkDefaultFont 12",text=str(partitions[i].device[:1]))
+        print(Gui.hddPercentage)
 
 
     def drawNETGraph(self, graph, text):

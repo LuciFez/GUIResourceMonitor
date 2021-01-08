@@ -16,10 +16,18 @@ def miniGraphThread(graph, component, miniGraphUsageList):
         Gui.ramAvailable.append(bytes2human(psutil.virtual_memory().available))
         Gui.ramUsed.append(bytes2human(psutil.virtual_memory().used))
     elif component == "HDD":
-        # used disk percent
-        # print(psutil.disk_usage('/').percent)
-        # print(psutil.disk_io_counters().read_bytes," ----- ",psutil.disk_io_counters().write_bytes)
-        ...
+        Gui.hddPartitionNumber = len(psutil.disk_partitions(all=True))
+        percent = []
+        used = []
+        free= []
+        for p in psutil.disk_partitions(all = True):
+            details = psutil.disk_usage(p.device)
+            percent.append(details.percent)
+            used.append(details.used)
+            free.append(details.free)
+        Gui.hddPercentage.append(percent)
+        Gui.hddUsed.append(used)
+        Gui.hddFree.append(free)
     elif component == "NET":
         ...
     if len(miniGraphUsageList) > 1:

@@ -21,6 +21,10 @@ ramAvailable = []
 ramUsed = []
 
 hddPercentage = []
+hddPartitionNumber = -1
+hddUsed = []
+hddFree = []
+
 netPercentage = []
 
 
