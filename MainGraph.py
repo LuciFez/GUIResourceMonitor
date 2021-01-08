@@ -146,7 +146,7 @@ class AppClass:
         self.barCanvas.create_line(0,mainGraphDefaultWidth,mainGraphDefaultWidth,mainGraphDefaultHeight)
         numberPartitions = len(psutil.disk_partitions(all=True))
         for i in range(0,numberPartitions):
-            self.barCanvas.create_rectangle(mainGraphDefaultWidth/2/numberPartitions - 20,0,mainGraphDefaultWidth/2/numberPartitions + 20,mainGraphDefaultHeight-1)
+            self.barCanvas.create_rectangle(mainGraphDefaultWidth/(numberPartitions+1)*(i+1) - 20,0,mainGraphDefaultWidth/(numberPartitions+1)*(i+1) + 20,mainGraphDefaultHeight-1)
 
 
     def drawNETGraph(self, graph, text):
