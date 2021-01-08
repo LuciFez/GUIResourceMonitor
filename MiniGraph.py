@@ -33,7 +33,14 @@ def miniGraphThread(graph, component, miniGraphUsageList):
         Gui.hddPercentage.append(percent)
         Gui.hddUsed.append(used)
         Gui.hddFree.append(free)
-        miniGraphUsageList.append(usedSpace*100/(usedSpace+availableSpace))
+
+        io_counters = psutil.Process().io_counters()
+        disk_io_counter = psutil.disk_io_counters()
+
+        miniGraphUsageList.append((io_counters[2] + io_counters[3]) / (disk_io_counter[2]+disk_io_counter[3])*100)
+
+
+
     elif component == "NET":
         ...
     if len(miniGraphUsageList) > 1:

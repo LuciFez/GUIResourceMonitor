@@ -145,16 +145,16 @@ class AppClass:
         self.barCanvas = Canvas(graph,width=mainGraphDefaultWidth,height=mainGraphDefaultHeight+100, bg="white", bd=0, highlightthickness=0)
         self.barCanvas.grid(row=0,column=0,padx=3,pady=3)
         self.barCanvas.create_line(0,mainGraphDefaultWidth,mainGraphDefaultWidth,mainGraphDefaultHeight+100)
-        numberPartitions = len(psutil.disk_partitions(all=True))
+        Gui.hddPartitionNumber = len(psutil.disk_partitions(all=True))
         partitions = psutil.disk_partitions(all=True)
-        for i in range(0,numberPartitions):
-            self.barCanvas.create_rectangle(mainGraphDefaultWidth/(numberPartitions+1)*(i+1) - 20,0,mainGraphDefaultWidth/(numberPartitions+1)*(i+1) + 20,mainGraphDefaultHeight+100-20,outline="#549401")
-            self.barCanvas.create_rectangle(mainGraphDefaultWidth/(numberPartitions+1)*(i+1) - 19,
+        for i in range(0,Gui.hddPartitionNumber):
+            self.barCanvas.create_rectangle(mainGraphDefaultWidth/(Gui.hddPartitionNumber+1)*(i+1) - 20,0,mainGraphDefaultWidth/(Gui.hddPartitionNumber+1)*(i+1) + 20,mainGraphDefaultHeight+100-20,outline="#549401")
+            self.barCanvas.create_rectangle(mainGraphDefaultWidth/(Gui.hddPartitionNumber+1)*(i+1) - 19,
                                             (mainGraphDefaultHeight+100-20)-(mainGraphDefaultHeight+100-20)*(Gui.hddFree[len(Gui.hddFree)-1][i]*100/(Gui.hddFree[len(Gui.hddFree)-1][i]+Gui.hddUsed[len(Gui.hddUsed)-1][i]))/100
-                                            ,mainGraphDefaultWidth/(numberPartitions+1)*(i+1) + 19,
+                                            ,mainGraphDefaultWidth/(Gui.hddPartitionNumber+1)*(i+1) + 19,
                                             mainGraphDefaultHeight+100-21,fill="#EDF9EB",outline="#EDF9EB")
-            self.barCanvas.create_text(mainGraphDefaultWidth/(numberPartitions+1)*(i+1),mainGraphDefaultHeight+100-30,fill="#549401",font="TkDefaultFont 10",text=str(Gui.hddFree[len(Gui.hddUsed)-1][i]*100/(Gui.hddFree[len(Gui.hddFree)-1][i]+Gui.hddUsed[len(Gui.hddUsed)-1][i]))[:5])
-            self.barCanvas.create_text(mainGraphDefaultWidth/(numberPartitions+1)*(i+1),mainGraphDefaultHeight+100-6,fill="black",font="TkDefaultFont 12",text=str(partitions[i].device[:1]))
+            self.barCanvas.create_text(mainGraphDefaultWidth/(Gui.hddPartitionNumber+1)*(i+1),mainGraphDefaultHeight+100-30,fill="#549401",font="TkDefaultFont 10",text=str(Gui.hddFree[len(Gui.hddUsed)-1][i]*100/(Gui.hddFree[len(Gui.hddFree)-1][i]+Gui.hddUsed[len(Gui.hddUsed)-1][i]))[:5])
+            self.barCanvas.create_text(mainGraphDefaultWidth/(Gui.hddPartitionNumber+1)*(i+1),mainGraphDefaultHeight+100-6,fill="black",font="TkDefaultFont 12",text=str(partitions[i].device[:1]))
 
         self.hddThread = threading.Thread(target=MainHDDThread.hddThread, args=(self.barCanvas,), daemon=True)
         self.hddThread.start()
