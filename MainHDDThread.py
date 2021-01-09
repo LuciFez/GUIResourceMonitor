@@ -68,7 +68,7 @@ def hddThread(barCanvas,diskIOPerfect):
                                                       MainGraph.mainGraphDefaultHeight - 10, fill="black",
                                                       font="TkDefaultFont 8", text="0.00")
                         else:
-                            speed = diffReadList[i] / 1024 / 1024
+                            speed = diffWriteList[i] / 1024 / 1024
                             if max(diffReadList + diffWriteList) / 2 < diffWriteList[i]:
                                 diskIOPerfect.create_text(MainGraph.mainGraphDefaultWidth - 16,MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 *diffWriteList[i] * 100 / max(diffReadList + diffWriteList) + 10, fill="black",font="TkDefaultFont 8", text=str(speed)[:4])
                             else:
@@ -105,14 +105,16 @@ def hddThread(barCanvas,diskIOPerfect):
 
                 diskIOPerfect.create_text(30, 8, fill="black",font="TkDefaultFont 8", text="Max speed")
                 diskIOPerfect.create_text(30, MainGraph.mainGraphDefaultHeight - 8, fill="black",font="TkDefaultFont 8", text="Low speed")
+                diskIOPerfect.create_text(33, 18, fill="blue", font="TkDefaultFont 8", text="Read speed")
+                diskIOPerfect.create_text(33, 28, fill="#549401", font="TkDefaultFont 8", text="Write speed")
         else:
             barCanvas.create_text(MainGraph.mainGraphDefaultWidth/2,(MainGraph.mainGraphDefaultHeight)/2, fill="#549401", font="TkDefaultFont 16",text="Loading...")
             diskIOPerfect.config(highlightthickness=0, highlightbackground="#5CA6D0")
-            time.sleep(0.5)
+            time.sleep(1)
             diskIOPerfect.config(highlightthickness=1, highlightbackground="#5CA6D0")
             hddThread(barCanvas,diskIOPerfect)
 
-        time.sleep(0.5)
+        time.sleep(1)
         hddThread(barCanvas,diskIOPerfect)
     else:
         print("Stopped the thread HDD")

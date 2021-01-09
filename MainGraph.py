@@ -156,10 +156,13 @@ class AppClass:
 
         self.diskIOPerfect = Canvas(graph,width=mainGraphDefaultWidth,height=mainGraphDefaultHeight , bg="white",
                           highlightthickness=1, highlightbackground="#5CA6D0")
-        self.diskIOPerfect.grid(row=1, column=0, padx=3, pady=3)
+        self.diskIOPerfect.grid(row=1, column=0, padx=0, pady=0)
         self.diskIOPerfect.create_text(30, 8, fill="black", font="TkDefaultFont 8", text="Max speed")
         self.diskIOPerfect.create_text(30, mainGraphDefaultHeight - 8, fill="black", font="TkDefaultFont 8",
                                   text="Low speed")
+
+        self.diskIOPerfect.create_text(33, 18, fill="blue", font="TkDefaultFont 8", text="Read speed")
+        self.diskIOPerfect.create_text(33, 28, fill="#549401", font="TkDefaultFont 8", text="Write speed")
 
         self.hddThread = threading.Thread(target=MainHDDThread.hddThread, args=(self.barCanvas, self.diskIOPerfect),daemon=True)
         self.hddThread.start()
