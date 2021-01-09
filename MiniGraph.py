@@ -53,38 +53,41 @@ def miniGraphThread(graph, component, miniGraphUsageList):
         ...
 
     if component == "HDD":
-        if len(Gui.diskWrite) > 1:
-            i = len(Gui.diskWrite) - 1
+        if len(Gui.diskWrite) > 1 and len(Gui.diskRead) > 1:
+            diffWriteList = []
+            for index in range(0,len(Gui.diskWrite)-1):
+                if Gui.diskWrite[index+1][0]-Gui.diskWrite[index][0]==0:
+                    diffWriteList.append(1)
+                else:
+                    diffWriteList.append(Gui.diskWrite[index+1][0]-Gui.diskWrite[index][0])
+
+            diffReadList = []
+            for index in range(0, len(Gui.diskRead) - 1):
+                if Gui.diskRead[index+1][0]-Gui.diskRead[index][0]==0:
+                    diffReadList.append(1)
+                else:
+                    diffReadList.append(Gui.diskRead[index + 1][0] - Gui.diskRead[index][0])
+
+            i = len(diffWriteList) - 1
             positionX = Gui.miniGraphDefaultWidth
 
-            diffList = []
-            for index in range(0,len(Gui.diskWrite)-1):
-                diffList.append(Gui.diskWrite[index+1][0]-Gui.diskWrite[index][0])
-
-            while i > 1:
-                if len(Gui.diskWrite) > 30 and i < len(Gui.diskWrite) - 30:
-                    break
+            while i > 0:
                 graph.create_line(positionX,
-                                  Gui.miniGraphDefaultHeight - Gui.miniGraphDefaultHeight / 100 * ((Gui.diskWrite[i][0]-Gui.diskWrite[i-1][0])*100/max(diffList)),
+                                  Gui.miniGraphDefaultHeight - Gui.miniGraphDefaultHeight / 100 * (diffWriteList[i]*100/max(diffReadList+diffWriteList)),
                                   positionX - Gui.miniGraphDefaultWidth / 30,
-                                  Gui.miniGraphDefaultHeight - Gui.miniGraphDefaultHeight / 100 * ((Gui.diskWrite[i-1][0]-Gui.diskWrite[i-2][0])*100/max(diffList)),
+                                  Gui.miniGraphDefaultHeight - Gui.miniGraphDefaultHeight / 100 * (diffWriteList[i-1]*100/max(diffReadList+diffWriteList)),
                                   fill='#549401', width=1)
                 positionX -= Gui.miniGraphDefaultWidth / 30
                 i -= 1
 
-            i = len(Gui.diskRead) - 1
+            i = len(diffReadList) - 1
             positionX = Gui.miniGraphDefaultWidth
 
-            diffList = []
-            for index in range(0, len(Gui.diskRead) - 1):
-                diffList.append(Gui.diskRead[index + 1][0] - Gui.diskRead[index][0])
-            while i > 1:
-                if len(Gui.diskRead) > 30 and i < len(Gui.diskRead) - 30:
-                    break
+            while i > 0:
                 graph.create_line(positionX,
-                                  Gui.miniGraphDefaultHeight - Gui.miniGraphDefaultHeight / 100 * ((Gui.diskRead[i][0]-Gui.diskRead[i-1][0])*100/max(diffList)),
+                                  Gui.miniGraphDefaultHeight - Gui.miniGraphDefaultHeight / 100 * diffReadList[i]*100/max(diffReadList+diffWriteList),
                                   positionX - Gui.miniGraphDefaultWidth / 30,
-                                  Gui.miniGraphDefaultHeight - Gui.miniGraphDefaultHeight / 100 * ((Gui.diskRead[i-1][0]-Gui.diskRead[i-2][0])*100/max(diffList)),
+                                  Gui.miniGraphDefaultHeight - Gui.miniGraphDefaultHeight / 100 * diffReadList[i-1]*100/max(diffReadList+diffWriteList),
                                   fill='blue', width=1)
                 positionX -= Gui.miniGraphDefaultWidth / 30
                 i -= 1

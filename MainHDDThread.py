@@ -35,82 +35,84 @@ def hddThread(barCanvas,diskIOPerfect):
                                            fill="black", font="TkDefaultFont 12",
                                            text=str(partitions[i].device[:1]) + ":/")
 
-            if len(Gui.diskWrite) > 1:
-                i = len(Gui.diskWrite) - 1
+            if len(Gui.diskWrite) > 1 and len(Gui.diskRead) > 1:
+                diffWriteList = []
+                for index in range(0, len(Gui.diskWrite) - 1):
+                    if Gui.diskWrite[index + 1][0] - Gui.diskWrite[index][0] == 0:
+                        diffWriteList.append(1)
+                    else:
+                        diffWriteList.append(Gui.diskWrite[index + 1][0] - Gui.diskWrite[index][0])
+
+                diffReadList = []
+                for index in range(0, len(Gui.diskRead) - 1):
+                    if Gui.diskRead[index + 1][0] - Gui.diskRead[index][0] == 0:
+                        diffReadList.append(1)
+                    else:
+                        diffReadList.append(Gui.diskRead[index + 1][0] - Gui.diskRead[index][0])
+
+                i = len(diffWriteList) - 1
                 positionX = MainGraph.mainGraphDefaultWidth
 
-                diffList = []
-                for index in range(0,len(Gui.diskWrite)-1):
-                    diffList.append(Gui.diskWrite[index+1][0]-Gui.diskWrite[index][0])
-
-                while i > 1:
-                    if len(Gui.diskWrite) > 30 and i < len(Gui.diskWrite) - 30:
-                        break
+                while i > 0:
                     diskIOPerfect.create_line(positionX,
-                                      MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 * ((Gui.diskWrite[i][0]-Gui.diskWrite[i-1][0])*100/max(diffList)),
+                                      MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 * (
+                                                  diffWriteList[i] * 100 / max(diffReadList + diffWriteList)),
                                       positionX - MainGraph.mainGraphDefaultWidth / 30,
-                                      MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 * ((Gui.diskWrite[i-1][0]-Gui.diskWrite[i-2][0])*100/max(diffList)),
-                                      fill='#549401', width=2)
-                    if (Gui.diskWrite[i][0]-Gui.diskWrite[i-1][0])/1000000 > max(diffList)/2:
-                        diskIOPerfect.create_text(positionX-10,
-                                          MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 * ((Gui.diskWrite[i][0]-Gui.diskWrite[i-1][0])*100/max(diffList))+14,
-                                          text= str((Gui.diskWrite[i][0]-Gui.diskWrite[i-1][0])/1000000)[:4])
-                    else:
-                        diskIOPerfect.create_text(positionX - 10,
-                                          MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 * ((Gui.diskWrite[i][0] - Gui.diskWrite[i - 1][0]) * 100 / max(diffList)) - 14,
-                                          text=str((Gui.diskWrite[i][0] - Gui.diskWrite[i - 1][0]) / 1000000)[:4])
+                                      MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 * (
+                                                  diffWriteList[i - 1] * 100 / max(diffReadList + diffWriteList)),
+                                      fill='#549401', width=1)
+
+                    if i==len(diffWriteList)-1:
+                        if diffWriteList[i] == 1:
+                            diskIOPerfect.create_text(MainGraph.mainGraphDefaultWidth - 16,
+                                                      MainGraph.mainGraphDefaultHeight - 10, fill="black",
+                                                      font="TkDefaultFont 8", text="0.00")
+                        else:
+                            speed = diffReadList[i] / 1024 / 1024
+                            if max(diffReadList + diffWriteList) / 2 < diffWriteList[i]:
+                                diskIOPerfect.create_text(MainGraph.mainGraphDefaultWidth - 16,MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 *diffWriteList[i] * 100 / max(diffReadList + diffWriteList) + 10, fill="black",font="TkDefaultFont 8", text=str(speed)[:4])
+                            else:
+                                diskIOPerfect.create_text(MainGraph.mainGraphDefaultWidth - 16,MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 *diffWriteList[i] * 100 / max(diffReadList + diffWriteList) - 10, fill="black",font="TkDefaultFont 8", text=str(speed)[:4])
+
                     positionX -= MainGraph.mainGraphDefaultWidth / 30
                     i -= 1
 
-                if len(Gui.diskRead) > 1:
-                    i = len(Gui.diskRead) - 1
-                    positionX = MainGraph.mainGraphDefaultWidth
+                i = len(diffReadList) - 1
+                positionX = MainGraph.mainGraphDefaultWidth
 
-                    diffList = []
-                    for index in range(0, len(Gui.diskRead) - 1):
-                        diffList.append(Gui.diskRead[index + 1][0] - Gui.diskRead[index][0])
+                while i > 0:
+                    diskIOPerfect.create_line(positionX,
+                                      MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 * diffReadList[
+                                          i] * 100 / max(diffReadList + diffWriteList),
+                                      positionX - MainGraph.mainGraphDefaultWidth / 30,
+                                      MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 * diffReadList[
+                                          i - 1] * 100 / max(diffReadList + diffWriteList),
+                                      fill='blue', width=1)
 
-                    while i > 1:
-                        if len(Gui.diskRead) > 30 and i < len(Gui.diskRead) - 30:
-                            break
-                        diskIOPerfect.create_line(positionX,
-                                                  MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 * (
-                                                              (Gui.diskRead[i][0] - Gui.diskRead[i - 1][
-                                                                  0]) * 100 / max(diffList)),
-                                                  positionX - MainGraph.mainGraphDefaultWidth / 30,
-                                                  MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 * (
-                                                              (Gui.diskRead[i - 1][0] - Gui.diskRead[i - 2][
-                                                                  0]) * 100 / max(diffList)),
-                                                  fill='blue', width=2)
-                        if (Gui.diskRead[i][0] - Gui.diskRead[i - 1][0]) / 1000000 > max(diffList) / 2:
-                            diskIOPerfect.create_text(positionX - 10,
-                                                      MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 * (
-                                                                  (Gui.diskRead[i][0] - Gui.diskRead[i - 1][
-                                                                      0]) * 100 / max(diffList)) + 14,
-                                                      text=str(
-                                                          (Gui.diskRead[i][0] - Gui.diskRead[i - 1][0]) / 1000000)[
-                                                           :4])
+                    if i==len(diffReadList)-1:
+                        if diffReadList[i] == 1:
+                            diskIOPerfect.create_text(MainGraph.mainGraphDefaultWidth-16, MainGraph.mainGraphDefaultHeight-10, fill="black", font="TkDefaultFont 8", text="0.00")
                         else:
-                            diskIOPerfect.create_text(positionX - 10,
-                                                      MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 * (
-                                                                  (Gui.diskRead[i][0] - Gui.diskRead[i - 1][
-                                                                      0]) * 100 / max(diffList)) - 14,
-                                                      text=str(
-                                                          (Gui.diskRead[i][0] - Gui.diskRead[i - 1][0]) / 1000000)[
-                                                           :4])
-                        positionX -= MainGraph.mainGraphDefaultWidth / 30
-                        i -= 1
+                            speed = diffReadList[i]/1024/1024
+                            if max(diffReadList + diffWriteList)/2 < diffReadList[i]:
+                                diskIOPerfect.create_text(MainGraph.mainGraphDefaultWidth-16, MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 * diffReadList[i] * 100 / max(diffReadList + diffWriteList)+10, fill="black", font="TkDefaultFont 8", text=str(speed)[:4])
+                            else:
+                                diskIOPerfect.create_text(MainGraph.mainGraphDefaultWidth-16, MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 * diffReadList[i] * 100 / max(diffReadList + diffWriteList)-10, fill="black", font="TkDefaultFont 8", text=str(speed)[:4])
+
+
+                    positionX -= MainGraph.mainGraphDefaultWidth / 30
+                    i -= 1
 
                 diskIOPerfect.create_text(30, 8, fill="black",font="TkDefaultFont 8", text="Max speed")
                 diskIOPerfect.create_text(30, MainGraph.mainGraphDefaultHeight - 8, fill="black",font="TkDefaultFont 8", text="Low speed")
         else:
             barCanvas.create_text(MainGraph.mainGraphDefaultWidth/2,(MainGraph.mainGraphDefaultHeight)/2, fill="#549401", font="TkDefaultFont 16",text="Loading...")
             diskIOPerfect.config(highlightthickness=0, highlightbackground="#5CA6D0")
-            time.sleep(1)
+            time.sleep(0.5)
             diskIOPerfect.config(highlightthickness=1, highlightbackground="#5CA6D0")
             hddThread(barCanvas,diskIOPerfect)
 
-        time.sleep(1)
+        time.sleep(0.5)
         hddThread(barCanvas,diskIOPerfect)
     else:
         print("Stopped the thread HDD")
