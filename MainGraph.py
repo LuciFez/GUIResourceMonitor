@@ -4,6 +4,7 @@ import threading
 import MainCPUThread
 import MainRAMThread
 import MainHDDThread
+import MainNETThread
 import Gui
 from psutil._common import bytes2human
 
@@ -140,11 +141,20 @@ class AppClass:
             Gui.ramAvailable, Gui.ramUsed), daemon=True)
         self.ramThread.start()
 
-
     def drawHDDGraph(self, graph):
+        self.diskIOPerfect = Canvas(graph, width=mainGraphDefaultWidth, height=mainGraphDefaultHeight, bg="white",
+                                    highlightthickness=1, highlightbackground="#5CA6D0")
+        self.diskIOPerfect.grid(row=0, column=0, padx=0, pady=0)
+        self.diskIOPerfect.create_text(30, 8, fill="black", font="TkDefaultFont 8", text="Max speed")
+        self.diskIOPerfect.create_text(30, mainGraphDefaultHeight - 8, fill="black", font="TkDefaultFont 8",
+                                       text="Low speed")
+
+        self.diskIOPerfect.create_text(30, 18, fill="blue", font="TkDefaultFont 8", text="MBps read")
+        self.diskIOPerfect.create_text(36, 28, fill="#549401", font="TkDefaultFont 8", text="MBps written")
+
         self.barCanvas = Canvas(graph,width=mainGraphDefaultWidth,height=mainGraphDefaultHeight, bg="white", bd=0, highlightthickness=0)
-        self.barCanvas.grid(row=0,column=0,padx=3,pady=3)
-        self.barCanvas.create_line(0,mainGraphDefaultWidth,mainGraphDefaultWidth,mainGraphDefaultHeight)
+        self.barCanvas.grid(row=1,column=0,padx=3,pady=3)
+
         Gui.hddPartitionNumber = len(psutil.disk_partitions(all=True))
         partitions = psutil.disk_partitions(all=True)
         for i in range(0,Gui.hddPartitionNumber):
@@ -154,22 +164,26 @@ class AppClass:
             self.barCanvas.create_text(120,mainGraphDefaultHeight / (Gui.hddPartitionNumber + 1) * (i + 1), fill="#549401", font="TkDefaultFont 10", text=str(Gui.hddUsed[len(Gui.hddUsed) - 1][i] * 100 / (Gui.hddFree[len(Gui.hddFree) - 1][i] + Gui.hddUsed[len(Gui.hddUsed) - 1][i]))[:5]+ "% used")
             self.barCanvas.create_text(40,mainGraphDefaultHeight / (Gui.hddPartitionNumber + 1) * (i + 1), fill="black", font="TkDefaultFont 12",text=str(partitions[i].device[:1])+":/")
 
-        self.diskIOPerfect = Canvas(graph,width=mainGraphDefaultWidth,height=mainGraphDefaultHeight , bg="white",
-                          highlightthickness=1, highlightbackground="#5CA6D0")
-        self.diskIOPerfect.grid(row=1, column=0, padx=0, pady=0)
-        self.diskIOPerfect.create_text(30, 8, fill="black", font="TkDefaultFont 8", text="Max speed")
-        self.diskIOPerfect.create_text(30, mainGraphDefaultHeight - 8, fill="black", font="TkDefaultFont 8",
-                                  text="Low speed")
 
-        self.diskIOPerfect.create_text(33, 18, fill="blue", font="TkDefaultFont 8", text="Read speed")
-        self.diskIOPerfect.create_text(33, 28, fill="#549401", font="TkDefaultFont 8", text="Write speed")
 
         self.hddThread = threading.Thread(target=MainHDDThread.hddThread, args=(self.barCanvas, self.diskIOPerfect),daemon=True)
         self.hddThread.start()
 
 
-    def drawNETGraph(self, graph, text):
-        ...
+    def drawNETGraph(self, graph):
+        self.netIOCanvas= Canvas(graph, width=mainGraphDefaultWidth, height=mainGraphDefaultHeight, bg="white",
+                                    highlightthickness=1, highlightbackground="#5CA6D0")
+        self.netIOCanvas.grid(row=0, column=0, padx=2, pady=2)
+        self.netIOCanvas.create_text(30, 8, fill="black", font="TkDefaultFont 8", text="Max speed")
+        self.netIOCanvas.create_text(30, mainGraphDefaultHeight - 8, fill="black", font="TkDefaultFont 8",
+                                       text="Low speed")
+
+
+        self.netIOCanvas.create_text(40, 18, fill="blue", font="TkDefaultFont 8", text="MBps received")
+        self.netIOCanvas.create_text(29, 28, fill="#549401", font="TkDefaultFont 8", text="MBps sent")
+
+        self.netThread = threading.Thread(target=MainNETThread.netThread, args=(self.netIOCanvas,), daemon=True)
+        self.netThread.start()
 
     def drawMiniCPUsDetails(self, cpu, index):
         cpu.create_text((mainGraphDefaultHeight) - 25, 5, fill="#72B2D6", font="Times 6 italic bold",

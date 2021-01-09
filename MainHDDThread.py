@@ -8,9 +8,16 @@ def hddThread(barCanvas,diskIOPerfect):
     if MainGraph.hdd == True:
         barCanvas.delete("all")
         diskIOPerfect.delete("all")
-        barCanvas.create_line(0, MainGraph.mainGraphDefaultWidth, MainGraph.mainGraphDefaultWidth, MainGraph.mainGraphDefaultHeight )
         partitions = psutil.disk_partitions(all=True)
         if (Gui.hddPartitionNumber == len(partitions)):
+            diskIOPerfect.create_text(30, 8, fill="black", font="TkDefaultFont 8", text="Max speed")
+            diskIOPerfect.create_text(30, MainGraph.mainGraphDefaultHeight - 8, fill="black", font="TkDefaultFont 8",
+                                      text="Low speed")
+            diskIOPerfect.create_text(30, 18, fill="blue", font="TkDefaultFont 8", text="MBps read")
+            diskIOPerfect.create_text(36, 28, fill="#549401", font="TkDefaultFont 8", text="MBps written")
+            diskIOPerfect.create_text(MainGraph.mainGraphDefaultWidth - 14, 8, fill="#72B2D6",
+                                      font="Times 10 italic bold", text="HDD")
+
             for i in range(0, Gui.hddPartitionNumber):
                 barCanvas.create_rectangle(70,
                                                 MainGraph.mainGraphDefaultHeight / (Gui.hddPartitionNumber + 1) * (i + 1) - 20,
@@ -99,14 +106,8 @@ def hddThread(barCanvas,diskIOPerfect):
                             else:
                                 diskIOPerfect.create_text(MainGraph.mainGraphDefaultWidth-16, MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 * diffReadList[i] * 100 / max(diffReadList + diffWriteList)-10, fill="black", font="TkDefaultFont 8", text=str(speed)[:4])
 
-
                     positionX -= MainGraph.mainGraphDefaultWidth / 30
                     i -= 1
-
-                diskIOPerfect.create_text(30, 8, fill="black",font="TkDefaultFont 8", text="Max speed")
-                diskIOPerfect.create_text(30, MainGraph.mainGraphDefaultHeight - 8, fill="black",font="TkDefaultFont 8", text="Low speed")
-                diskIOPerfect.create_text(33, 18, fill="blue", font="TkDefaultFont 8", text="Read speed")
-                diskIOPerfect.create_text(33, 28, fill="#549401", font="TkDefaultFont 8", text="Write speed")
         else:
             barCanvas.create_text(MainGraph.mainGraphDefaultWidth/2,(MainGraph.mainGraphDefaultHeight)/2, fill="#549401", font="TkDefaultFont 16",text="Loading...")
             diskIOPerfect.config(highlightthickness=0, highlightbackground="#5CA6D0")

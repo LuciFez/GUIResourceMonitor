@@ -2,6 +2,8 @@ import psutil
 import time
 import Gui
 from psutil._common import bytes2human
+import wmi
+import pythoncom
 
 def miniGraphThread(graph, component, miniGraphUsageList):
     if component == "CPU":
@@ -9,7 +11,11 @@ def miniGraphThread(graph, component, miniGraphUsageList):
         Gui.cpuPercentagePerCore.append(psutil.cpu_percent(percpu=True))
         Gui.cpuPercentage = miniGraphUsageList
     elif component == "GPU":
-        ...
+        pythoncom.CoInitialize()
+        computer = wmi.WMI()
+        gpu_info = computer.Win32_VideoController()[0]
+        print('Graphics Card: {0}'.format(gpu_info.Name))
+
     elif component == "RAM":
         miniGraphUsageList.append(psutil.virtual_memory().percent)
         Gui.ramPercentage.append(psutil.virtual_memory().percent)
@@ -42,15 +48,11 @@ def miniGraphThread(graph, component, miniGraphUsageList):
 
         Gui.diskRead.append(readList)
         Gui.diskWrite.append(writeList)
-        a = (readList[0]-Gui.diskRead[len(Gui.diskRead)-2][0])/1000000
-        b = (writeList[0]-Gui.diskWrite[len(Gui.diskWrite)-2][0])/1000000
-        #print("read: "+str(a)+" write: "+str(b))
         miniGraphUsageList.append(usedSpace*100/(usedSpace+availableSpace))
-
-
-
     elif component == "NET":
-        ...
+        netIO = psutil.net_io_counters(pernic=False,nowrap=True)
+        Gui.netSent.append(netIO[0])
+        Gui.netReceived.append(netIO[1])
 
     if component == "HDD":
         if len(Gui.diskWrite) > 1 and len(Gui.diskRead) > 1:
@@ -91,8 +93,43 @@ def miniGraphThread(graph, component, miniGraphUsageList):
                                   fill='blue', width=1)
                 positionX -= Gui.miniGraphDefaultWidth / 30
                 i -= 1
+        graph.create_text(Gui.miniGraphDefaultWidth - 10, 6, fill="#72B2D6", font="Times 6 italic bold", text="HDD")
     elif component == "NET":
-        ...
+        if len(Gui.netReceived) > 1 and len(Gui.netSent)>1:
+            diffWriteList = []
+            for index in range(0, len(Gui.netReceived) - 1):
+                if Gui.netReceived[index+1] - Gui.netReceived[index] == 0:
+                    diffWriteList.append(1)
+                else:
+                    diffWriteList.append(Gui.netReceived[index + 1] - Gui.netReceived[index])
+            diffReadList = []
+            for index in range(0, len(Gui.netSent) - 1):
+                if Gui.netSent[index + 1] - Gui.netSent[index] == 0:
+                    diffReadList.append(1)
+                else:
+                    diffReadList.append(Gui.netSent[index + 1] - Gui.netSent[index])
+
+            i = len(diffWriteList)-1
+            positionX = Gui.miniGraphDefaultWidth
+            while i > 0:
+                graph.create_line(positionX,
+                                  Gui.miniGraphDefaultHeight - Gui.miniGraphDefaultHeight / 100 * diffWriteList[i] * 100 / max(diffWriteList+diffReadList),
+                                  positionX - Gui.miniGraphDefaultWidth / 30,
+                                  Gui.miniGraphDefaultHeight - Gui.miniGraphDefaultHeight / 100 * diffWriteList[i-1] * 100 / max(diffWriteList+diffReadList),
+                                  fill='blue', width=1)
+                positionX -= Gui.miniGraphDefaultWidth / 30
+                i -= 1
+            i = len(diffReadList) - 1
+            positionX = Gui.miniGraphDefaultWidth
+            while i > 0:
+                graph.create_line(positionX,
+                                 Gui.miniGraphDefaultHeight - Gui.miniGraphDefaultHeight / 100 * diffReadList[i] * 100 / max(diffWriteList+diffReadList),
+                                 positionX - Gui.miniGraphDefaultWidth / 30,
+                                 Gui.miniGraphDefaultHeight - Gui.miniGraphDefaultHeight / 100 * diffReadList[i - 1] * 100 / max(diffWriteList+diffReadList),
+                                 fill='#549401', width=1)
+                positionX -= Gui.miniGraphDefaultWidth / 30
+                i -= 1
+        graph.create_text(Gui.miniGraphDefaultWidth-10,6, fill="#72B2D6", font="Times 6 italic bold",text="NET")
     else:
         if len(miniGraphUsageList) > 1:
             i = len(miniGraphUsageList) - 1

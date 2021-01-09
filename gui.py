@@ -25,6 +25,8 @@ hddUsed = []
 hddFree = []
 
 netPercentage = []
+netSent = []
+netReceived = []
 
 
 def drawMiniGraphsDetails(miniGraph, component):
@@ -205,7 +207,7 @@ class Gui(Canvas):
             self.previousComponent = self.net
             for widget in graph.winfo_children():
                 widget.destroy()
-            self.mainGraph.drawCPUGraph(graph)
+            self.mainGraph.drawNETGraph(graph)
 
     def run(self):
 
