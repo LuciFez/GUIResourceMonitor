@@ -4,6 +4,9 @@ import Gui
 from psutil._common import bytes2human
 import wmi
 import pythoncom
+import GPUtil as GPU
+
+initialized = False
 
 def miniGraphThread(graph, component, miniGraphUsageList):
     if component == "CPU":
@@ -14,8 +17,16 @@ def miniGraphThread(graph, component, miniGraphUsageList):
         pythoncom.CoInitialize()
         computer = wmi.WMI()
         gpu_info = computer.Win32_VideoController()[0]
-        print(gpu_info)
-
+        if str(gpu_info.Name).find("NVIDIA") != -1:
+            Gui.gpuManufacturer = True
+            GPUs = GPU.getGPUs()
+            print(GPUs[0].name)
+            if GPUs[0].memoryUtil * 100 < 10:
+                Gui.gpuPercentage.append(GPUs[0].memoryUtil * 100)
+                miniGraphUsageList.append(GPUs[0].memoryUtil * 100)
+            else:
+                Gui.gpuPercentage.append(GPUs[0].memoryUtil * 100)
+                miniGraphUsageList.append(GPUs[0].memoryUtil * 100)
     elif component == "RAM":
         miniGraphUsageList.append(psutil.virtual_memory().percent)
         Gui.ramPercentage.append(psutil.virtual_memory().percent)
@@ -130,6 +141,25 @@ def miniGraphThread(graph, component, miniGraphUsageList):
                 positionX -= Gui.miniGraphDefaultWidth / 30
                 i -= 1
         graph.create_text(Gui.miniGraphDefaultWidth-10,6, fill="#72B2D6", font="Times 6 italic bold",text="NET")
+    elif component == "GPU":
+        if Gui.gpuManufacturer == True:
+            if len(miniGraphUsageList) > 1:
+                i = len(miniGraphUsageList) - 1
+                positionX = Gui.miniGraphDefaultWidth
+                while i > 1:
+                    if len(miniGraphUsageList) > 30 and i < len(miniGraphUsageList) - 30:
+                        break
+                    graph.create_line(positionX,
+                                      Gui.miniGraphDefaultHeight - Gui.miniGraphDefaultHeight / 100 *
+                                      miniGraphUsageList[i],
+                                      positionX - Gui.miniGraphDefaultWidth / 30,
+                                      Gui.miniGraphDefaultHeight - Gui.miniGraphDefaultHeight / 100 *
+                                      miniGraphUsageList[i - 1],
+                                      fill='#549401', width=2)
+                    positionX -= Gui.miniGraphDefaultWidth / 30
+                    i -= 1
+        else:
+            graph.create_text(Gui.miniGraphDefaultWidth/2-30,Gui.miniGraphDefaultHeight/2, fill="#72B2D6", font="Times 8 italic bold",text="Buy Nvidia")
     else:
         if len(miniGraphUsageList) > 1:
             i = len(miniGraphUsageList) - 1

@@ -20,14 +20,13 @@
   <component name="ProjectId" id="1m0wLOu7JdKDOrCNBweoS4gjsyp" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/main.py" />
     <property name="restartRequiresConfirmation" value="false" />
-    <property name="settings.editor.selected.configurable" value="vcs.Git" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
@@ -37,7 +36,7 @@
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="C:\Python376\python.exe" />
+      <option name="SDK_HOME" value="D:\Facultate\Luci\Python\Proiect\GUIResourceMonitor\venv\Scripts\python.exe" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -52,18 +51,7 @@
       <method v="2" />
     </configuration>
   </component>
-  <component name="ServiceViewManager">
-    <option name="viewStates">
-      <list>
-        <serviceView>
-          <treeState>
-            <expand />
-            <select />
-          </treeState>
-        </serviceView>
-      </list>
-    </option>
-  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -82,40 +70,46 @@
       <screen x="0" y="0" width="1280" height="680" />
     </state>
     <state x="233" y="3" key="#Notifications/0.0.1280.680@0.0.1280.680" timestamp="1609113438271" />
-    <state x="2064" y="0" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1610200879883">
-      <screen x="1920" y="0" width="1920" height="1040" />
+    <state x="2064" y="0" width="1092" height="715" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1610223406992">
+      <screen x="1920" y="0" width="1920" height="1160" />
     </state>
     <state x="2064" y="0" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1280.680/1920.0.1920.1040@1920.0.1920.1040" timestamp="1610200879883" />
     <state x="96" y="0" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1280.680@0.0.1280.680" timestamp="1608644372333" />
+    <state x="2064" y="0" width="1092" height="715" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.824/1920.0.1920.1160@1920.0.1920.1160" timestamp="1610223406992" />
     <state x="414" y="152" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1608644120508">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
     <state x="414" y="152" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1280.680@0.0.1280.680" timestamp="1608644120508" />
-    <state x="2552" y="151" key="FileChooserDialogImpl" timestamp="1610200878707">
-      <screen x="1920" y="0" width="1920" height="1040" />
+    <state x="2552" y="168" key="FileChooserDialogImpl" timestamp="1610223197897">
+      <screen x="1920" y="0" width="1920" height="1160" />
     </state>
     <state x="2552" y="151" key="FileChooserDialogImpl/0.0.1280.680/1920.0.1920.1040@1920.0.1920.1040" timestamp="1610200878707" />
     <state x="421" y="99" key="FileChooserDialogImpl/0.0.1280.680@0.0.1280.680" timestamp="1608644360943" />
-    <state width="1899" height="213" key="GridCell.Tab.0.bottom" timestamp="1610218725498">
-      <screen x="1920" y="0" width="1920" height="1040" />
+    <state x="2552" y="168" key="FileChooserDialogImpl/0.0.1536.824/1920.0.1920.1160@1920.0.1920.1160" timestamp="1610223197897" />
+    <state width="1899" height="210" key="GridCell.Tab.0.bottom" timestamp="1610229595364">
+      <screen x="1920" y="0" width="1920" height="1160" />
     </state>
     <state width="1899" height="213" key="GridCell.Tab.0.bottom/0.0.1280.680/1920.0.1920.1040@1920.0.1920.1040" timestamp="1610218725498" />
     <state width="1259" height="136" key="GridCell.Tab.0.bottom/0.0.1280.680@0.0.1280.680" timestamp="1609322104622" />
-    <state width="1899" height="213" key="GridCell.Tab.0.center" timestamp="1610218725498">
-      <screen x="1920" y="0" width="1920" height="1040" />
+    <state width="1899" height="210" key="GridCell.Tab.0.bottom/0.0.1536.824/1920.0.1920.1160@1920.0.1920.1160" timestamp="1610229595364" />
+    <state width="1899" height="210" key="GridCell.Tab.0.center" timestamp="1610229595364">
+      <screen x="1920" y="0" width="1920" height="1160" />
     </state>
     <state width="1899" height="213" key="GridCell.Tab.0.center/0.0.1280.680/1920.0.1920.1040@1920.0.1920.1040" timestamp="1610218725498" />
     <state width="1259" height="136" key="GridCell.Tab.0.center/0.0.1280.680@0.0.1280.680" timestamp="1609322104621" />
-    <state width="1899" height="213" key="GridCell.Tab.0.left" timestamp="1610218725498">
-      <screen x="1920" y="0" width="1920" height="1040" />
+    <state width="1899" height="210" key="GridCell.Tab.0.center/0.0.1536.824/1920.0.1920.1160@1920.0.1920.1160" timestamp="1610229595364" />
+    <state width="1899" height="210" key="GridCell.Tab.0.left" timestamp="1610229595364">
+      <screen x="1920" y="0" width="1920" height="1160" />
     </state>
     <state width="1899" height="213" key="GridCell.Tab.0.left/0.0.1280.680/1920.0.1920.1040@1920.0.1920.1040" timestamp="1610218725498" />
     <state width="1259" height="136" key="GridCell.Tab.0.left/0.0.1280.680@0.0.1280.680" timestamp="1609322104621" />
-    <state width="1899" height="213" key="GridCell.Tab.0.right" timestamp="1610218725498">
-      <screen x="1920" y="0" width="1920" height="1040" />
+    <state width="1899" height="210" key="GridCell.Tab.0.left/0.0.1536.824/1920.0.1920.1160@1920.0.1920.1160" timestamp="1610229595364" />
+    <state width="1899" height="210" key="GridCell.Tab.0.right" timestamp="1610229595364">
+      <screen x="1920" y="0" width="1920" height="1160" />
     </state>
     <state width="1899" height="213" key="GridCell.Tab.0.right/0.0.1280.680/1920.0.1920.1040@1920.0.1920.1040" timestamp="1610218725498" />
     <state width="1259" height="136" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1609322104621" />
+    <state width="1899" height="210" key="GridCell.Tab.0.right/0.0.1536.824/1920.0.1920.1160@1920.0.1920.1160" timestamp="1610229595364" />
     <state width="1899" height="347" key="GridCell.Tab.1.bottom" timestamp="1610152716904">
       <screen x="1920" y="0" width="1920" height="1040" />
     </state>
@@ -136,10 +130,11 @@
     </state>
     <state width="1899" height="347" key="GridCell.Tab.1.right/0.0.1280.680/1920.0.1920.1040@1920.0.1920.1040" timestamp="1610152716904" />
     <state width="1259" height="204" key="GridCell.Tab.1.right/0.0.1280.680@0.0.1280.680" timestamp="1608736228366" />
-    <state x="144" y="0" key="SettingsEditor" timestamp="1609113428577">
-      <screen x="0" y="0" width="1280" height="680" />
+    <state x="2136" y="0" key="SettingsEditor" timestamp="1610230038543">
+      <screen x="1920" y="0" width="1920" height="1160" />
     </state>
     <state x="144" y="0" key="SettingsEditor/0.0.1280.680@0.0.1280.680" timestamp="1609113428577" />
+    <state x="2136" y="0" key="SettingsEditor/0.0.1536.824/1920.0.1920.1160@1920.0.1920.1160" timestamp="1610230038543" />
     <state x="2585" y="154" width="589" height="732" key="find.popup" timestamp="1610056715344">
       <screen x="1920" y="0" width="1920" height="1040" />
     </state>

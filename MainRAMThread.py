@@ -8,12 +8,10 @@ from psutil._common import bytes2human
 
 def ramThread(mainRAMGraph, ramBar, totalRam, availableRam, usedRam, ramPercentage,ramAvailable, ramUsed):
     if MainGraph.ram == True:
-        """
-        for checking threads
-        print(speedList)
+
         for thread in threading.enumerate():
             print(thread.name)
-        """
+
 
         mainRAMGraph.delete("all")
         drawGraphDetails(mainRAMGraph, "RAM")

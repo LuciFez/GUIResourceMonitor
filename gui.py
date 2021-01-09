@@ -13,6 +13,7 @@ cpuPercentage = []
 cpuPercentagePerCore = []
 
 gpuPercentage = []
+gpuManufacturer = False
 
 ramPercentage = []
 ramAvailable = []
