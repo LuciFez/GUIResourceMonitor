@@ -1,5 +1,3 @@
-import sys
-import time
 import threading
 import MainGraph
 import MiniGraph
@@ -20,7 +18,6 @@ ramPercentage = []
 ramAvailable = []
 ramUsed = []
 
-hddPercentage = []
 hddPartitionNumber = -1
 diskRead = []
 diskWrite = []
@@ -215,8 +212,6 @@ class Gui(Canvas):
         drawMiniGraphsDetails(self.cpu, "CPU")
         drawMiniGraphsDetails(self.gpu, "GPU")
         drawMiniGraphsDetails(self.ram, "RAM")
-        drawMiniGraphsDetails(self.hdd, "HDD")
-        drawMiniGraphsDetails(self.net, "NET")
 
         self.cpuThread = threading.Thread(target=MiniGraph.miniGraphThread, args=(self.cpu, "CPU", [],), daemon=True)
         self.cpuThread.start()
