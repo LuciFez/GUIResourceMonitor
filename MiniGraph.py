@@ -14,7 +14,7 @@ def miniGraphThread(graph, component, miniGraphUsageList):
         pythoncom.CoInitialize()
         computer = wmi.WMI()
         gpu_info = computer.Win32_VideoController()[0]
-        print('Graphics Card: {0}'.format(gpu_info.Name))
+        print(gpu_info)
 
     elif component == "RAM":
         miniGraphUsageList.append(psutil.virtual_memory().percent)
