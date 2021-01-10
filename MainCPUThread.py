@@ -1,6 +1,5 @@
 import time
 import MainGraph
-import threading
 import psutil
 
 
@@ -13,58 +12,60 @@ def cpuThread(mainGraphCanvas, miniCPUsCanvasList, fullSpeedCPULabel, eachCoreLa
         for thread in threading.enumerate():
             print(thread.name)
         """
+        try:
+            mainGraphCanvas.delete("all")
 
-        mainGraphCanvas.delete("all")
-        drawGraphDetails(mainGraphCanvas, "CPU")
+            drawGraphDetails(mainGraphCanvas, "CPU")
 
-        # draw graph usage lines
-        if len(speedList) > 1:
-            i = len(speedList) - 1
-            fullSpeedCPULabel.config(text="CPU speed: " + str(speedList[i]))
-            positionX = MainGraph.mainGraphDefaultWidth
-            while (i > 1):
-                if len(speedList) > 30 and i < len(speedList) - 30:
-                    break
-                mainGraphCanvas.create_line(positionX,
-                                            MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 *
-                                            speedList[i],
-                                            positionX - MainGraph.mainGraphDefaultWidth / 30,
-                                            MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 *
-                                            speedList[i - 1],
-                                            fill='#549401', width=2)
-                positionX -= MainGraph.mainGraphDefaultWidth / 30
-                i -= 1
+            # draw graph usage lines
+            if len(speedList) > 1:
+                i = len(speedList) - 1
+                fullSpeedCPULabel.config(text="CPU speed: " + str(speedList[i]))
+                positionX = MainGraph.mainGraphDefaultWidth
+                while (i > 1):
+                    if len(speedList) > 30 and i < len(speedList) - 30:
+                        break
+                    mainGraphCanvas.create_line(positionX,
+                                                MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 *
+                                                speedList[i],
+                                                positionX - MainGraph.mainGraphDefaultWidth / 30,
+                                                MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 *
+                                                speedList[i - 1],
+                                                fill='#549401', width=2)
+                    positionX -= MainGraph.mainGraphDefaultWidth / 30
+                    i -= 1
 
-        for miniCPU in miniCPUsCanvasList:
-            miniCPU.delete("all")
-            drawMiniCPUsDetails(miniCPU, miniCPUsCanvasList.index(miniCPU) + 1)
+            for miniCPU in miniCPUsCanvasList:
+                miniCPU.delete("all")
+                drawMiniCPUsDetails(miniCPU, miniCPUsCanvasList.index(miniCPU) + 1)
 
-        for miniCPU in miniCPUsCanvasList:
-            index = miniCPUsCanvasList.index(miniCPU)
-            percentage = []
-            for p in speedListPerCPU:
-                percentage.append(p[index])
-                if speedListPerCPU.index(p) == len(speedListPerCPU)-1:
-                    eachCoreLabelList[index].config(text = "Core " + str(index+1) + " speed: "+str(p[index]))
+            for miniCPU in miniCPUsCanvasList:
+                index = miniCPUsCanvasList.index(miniCPU)
+                percentage = []
+                for p in speedListPerCPU:
+                    percentage.append(p[index])
+                    if speedListPerCPU.index(p) == len(speedListPerCPU)-1:
+                        eachCoreLabelList[index].config(text = "Core " + str(index+1) + " speed: "+str(p[index]))
 
-            nbCPUs = psutil.cpu_count(logical=False)
-            miniCPUHeight = MainGraph.mainGraphDefaultHeight / 2 - 10
+                nbCPUs = psutil.cpu_count(logical=False)
+                miniCPUHeight = MainGraph.mainGraphDefaultHeight / 2 - 10
 
-            i = len(percentage) - 1
-            positionX = MainGraph.mainGraphDefaultWidth / nbCPUs * 2 - 10
-            while (i > 1):
-                if len(percentage) > 30 and i < len(percentage) - 30:
-                    break
-                miniCPU.create_line(positionX,
-                                    miniCPUHeight - miniCPUHeight / 100 *
-                                    percentage[i],
-                                    positionX - (MainGraph.mainGraphDefaultWidth / nbCPUs * 2 - 10) / 30,
-                                    miniCPUHeight - miniCPUHeight / 100 *
-                                    percentage[i - 1],
-                                    fill='#549401', width=2)
-                positionX -= (MainGraph.mainGraphDefaultWidth / nbCPUs * 2 - 10) / 30
-                i -= 1
-
+                i = len(percentage) - 1
+                positionX = MainGraph.mainGraphDefaultWidth / nbCPUs * 2 - 10
+                while (i > 1):
+                    if len(percentage) > 30 and i < len(percentage) - 30:
+                        break
+                    miniCPU.create_line(positionX,
+                                        miniCPUHeight - miniCPUHeight / 100 *
+                                        percentage[i],
+                                        positionX - (MainGraph.mainGraphDefaultWidth / nbCPUs * 2 - 10) / 30,
+                                        miniCPUHeight - miniCPUHeight / 100 *
+                                        percentage[i - 1],
+                                        fill='#549401', width=2)
+                    positionX -= (MainGraph.mainGraphDefaultWidth / nbCPUs * 2 - 10) / 30
+                    i -= 1
+        except:
+            pass
         time.sleep(1)
         cpuThread(mainGraphCanvas, miniCPUsCanvasList, fullSpeedCPULabel, eachCoreLabelList, speedList, speedListPerCPU)
     else:

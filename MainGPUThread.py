@@ -1,7 +1,5 @@
 import time
 import MainGraph
-import threading
-from tkinter import *
 import GPUtil
 import Gui
 
@@ -13,31 +11,34 @@ def gpuThread(gpuCanvas, gpuTM, gpuAM, gpuUM, gpuTemp):
         for thread in threading.enumerate():
             print(thread.name)
         """
-        gpuCanvas.delete("all")
-        drawGraphDetails(gpuCanvas, "GPU")
+        try:
+            gpuCanvas.delete("all")
 
-        GPUs = GPUtil.getGPUs()
-        gpuTM.config(text="Total memory: " + str(GPUs[0].memoryTotal) + " MB")
-        gpuAM.config(text="Available memory: " + str(GPUs[0].memoryFree) + " MB")
-        gpuUM.config(text="Used memory: " + str(GPUs[0].memoryUsed) + " MB")
-        gpuTemp.config(text="Temperature: " + str(GPUs[0].temperature) + " Celsius")
+            drawGraphDetails(gpuCanvas, "GPU")
 
-        if len(Gui.gpuPercentage) > 1:
-            i = len(Gui.gpuPercentage) - 1
-            positionX = MainGraph.mainGraphDefaultWidth
-            while (i > 1):
-                if len(Gui.gpuPercentage) > 30 and i < len(Gui.gpuPercentage) - 30:
-                    break
-                gpuCanvas.create_line(positionX,
-                                            MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 *
-                                            Gui.gpuPercentage[i],
-                                            positionX - MainGraph.mainGraphDefaultWidth / 30,
-                                            MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 *
-                                            Gui.gpuPercentage[i - 1],
-                                            fill='#549401', width=2)
-                positionX -= MainGraph.mainGraphDefaultWidth / 30
-                i -= 1
+            GPUs = GPUtil.getGPUs()
+            gpuTM.config(text="Total memory: " + str(GPUs[0].memoryTotal) + " MB")
+            gpuAM.config(text="Available memory: " + str(GPUs[0].memoryFree) + " MB")
+            gpuUM.config(text="Used memory: " + str(GPUs[0].memoryUsed) + " MB")
+            gpuTemp.config(text="Temperature: " + str(GPUs[0].temperature) + " Celsius")
 
+            if len(Gui.gpuPercentage) > 1:
+                i = len(Gui.gpuPercentage) - 1
+                positionX = MainGraph.mainGraphDefaultWidth
+                while (i > 1):
+                    if len(Gui.gpuPercentage) > 30 and i < len(Gui.gpuPercentage) - 30:
+                        break
+                    gpuCanvas.create_line(positionX,
+                                                MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 *
+                                                Gui.gpuPercentage[i],
+                                                positionX - MainGraph.mainGraphDefaultWidth / 30,
+                                                MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 *
+                                                Gui.gpuPercentage[i - 1],
+                                                fill='#549401', width=2)
+                    positionX -= MainGraph.mainGraphDefaultWidth / 30
+                    i -= 1
+        except:
+            pass
         time.sleep(1)
         gpuThread(gpuCanvas, gpuTM, gpuAM, gpuUM, gpuTemp)
     else:

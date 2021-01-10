@@ -2,7 +2,9 @@ import threading
 import MainGraph
 import MiniGraph
 from tkinter import *
-from PIL import ImageGrab
+import os
+from PIL import Image
+from datetime import datetime
 
 defaultRootWidth = 734
 defaultRootHeight = 550
@@ -42,7 +44,6 @@ def drawMiniGraphsDetails(miniGraph, component):
                                   text=str(int(100 - positionY / miniGraphDefaultHeight * 100)))
         positionY += miniGraphDefaultHeight / 10
 
-
 class Gui(Canvas):
 
     def __init__(self):
@@ -50,6 +51,7 @@ class Gui(Canvas):
         self.root.title("GUI Resource Monitor")
         self.root.geometry(f"{defaultRootWidth}x{defaultRootHeight}")
         self.root.configure(bg="white")
+        self.root.resizable(False, False)
 
         # menu
         self.menu = LabelFrame(self.root, padx=0, pady=0)
@@ -128,6 +130,7 @@ class Gui(Canvas):
             for widget in graph.winfo_children():
                 widget.destroy()
             self.mainGraph.drawCPUGraph(graph)
+
 
     def showGPU(self, event, graph):
         if self.previousComponent is self.gpu:
@@ -239,26 +242,123 @@ class Gui(Canvas):
         self.cpu.configure(highlightthickness=2, highlightbackground="#AD58C6")
         self.mainGraph = MainGraph.AppClass(self.graph)
 
-
         self.root.mainloop()
 
     def save(self):
+
+        self.open.config(state="disabled")
+        self.save.config(state="disabled")
+        self.exit.config(state="disabled")
+
+        self.cpu.bind("<Button-1>", lambda event: self.doNothing(event))
+        self.gpu.bind("<Button-1>", lambda event: self.doNothing(event))
+        self.ram.bind("<Button-1>", lambda event: self.doNothing(event))
+        self.hdd.bind("<Button-1>", lambda event: self.doNothing(event))
+        self.net.bind("<Button-1>", lambda event: self.doNothing(event))
+
+        now = datetime.now()
+        dt = now.strftime("%Y-%m-%dT%H%M%S")
+
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+
         if MainGraph.cpu == True:
-            x = self.root.winfo_rootx() + self.mainGraph.mainCPUGraph.winfo_x()
-            y = self.root.winfo_rooty() + self.mainGraph.mainCPUGraph.winfo_y()
-            x1 = x + self.mainGraph.mainCPUGraph.winfo_width()
-            y1 = y + self.mainGraph.mainCPUGraph.winfo_height()
-            ImageGrab.grab().crop((x, y, x1, y1)).save("C:\\Users\\UnicornRoz\\Desktop\\JPGurileVietii\\test.png")
-            img = PhotoImage(file="C:\\Users\\UnicornRoz\\Desktop\\JPGurileVietii\\test1.png")
-            self.mainGraph.mainCPUGraph.create_image(self.mainGraph.mainCPUGraph.winfo_x(), self.mainGraph.mainCPUGraph.winfo_y(), image=img)
+            folder = dir_path + "\\output\\" + str("cpu_") + str(dt)
+            try:
+                os.mkdir(folder, 0o755)
+                self.mainGraph.mainCPUGraph.postscript(file=folder + "\\cpu_" + str(dt) + ".ps", colormode='color')
+                psimage = Image.open(folder + "\\cpu_" + str(dt) + ".ps")
+                psimage.save(folder + "\\cpu_" + str(dt) + ".jpeg",dpi=(600,600))
+                psimage.save(folder + "\\cpu_" + str(dt) + ".pdf",dpi=(600,600))
+                textFile = open(folder + "\\cpu_" + str(dt) + ".txt", "w+")
+                textFile.write(str(cpuPercentage))
+                textFile.close()
+            except:
+                pass
+
         elif MainGraph.gpu == True:
-            self.mainGraph.gpuCanvas.postscript(file="C:\\Users\\UnicornRoz\\Desktop\\JPGurileVietii\\test.ps", colormode='color')
+            folder = dir_path + "\\output\\" + str("gpu_") + str(dt)
+            try:
+                os.mkdir(folder, 0o755)
+                self.mainGraph.gpuCanvas.postscript(file=folder + "\\gpu_" + str(dt) + ".ps", colormode='color')
+                psimage = Image.open(folder + "\\gpu_" + str(dt) + ".ps")
+                psimage.save(folder + "\\gpu_" + str(dt) + ".jpeg",dpi=(600,600))
+                psimage.save(folder + "\\gpu_" + str(dt) + ".pdf",dpi=(600,600))
+                textFile = open(folder + "\\gpu_" + str(dt) + ".txt", "w+")
+                textFile.write(str(gpuPercentage))
+                textFile.close()
+            except:
+                pass
+
         elif MainGraph.ram == True:
-            self.mainGraph.mainRAMGraph.postscript(file="C:\\Users\\UnicornRoz\\Desktop\\JPGurileVietii\\test.ps", colormode='color')
+            folder = dir_path + "\\output\\" + str("ram_") + str(dt)
+            try:
+                os.mkdir(folder, 0o755)
+                self.mainGraph.mainRAMGraph.postscript(file=folder + "\\ram_" + str(dt) + ".ps", colormode='color')
+                psimage = Image.open(folder + "\\ram_" + str(dt) + ".ps")
+                psimage.save(folder + "\\ram_" + str(dt) + ".jpeg",dpi=(600,600))
+                psimage.save(folder + "\\ram_" + str(dt) + ".pdf",dpi=(600,600))
+                textFile = open(folder + "\\ram_" + str(dt) + ".txt", "w+")
+                textFile.write(str(ramPercentage))
+                textFile.close()
+            except:
+                pass
+
         elif MainGraph.hdd == True:
-            self.mainGraph.diskIOPerfect.postscript(file="C:\\Users\\UnicornRoz\\Desktop\\JPGurileVietii\\test.ps", colormode='color')
+            folder = dir_path + "\\output\\" + str("hdd_") + str(dt)
+            try:
+                os.mkdir(folder, 0o755)
+                self.mainGraph.diskIOPerfect.postscript(file=folder + "\\hdd_" + str(dt) + ".ps", colormode='color')
+                psimage = Image.open(folder + "\\hdd_" + str(dt) + ".ps")
+                psimage.save(folder + "\\hdd_" + str(dt) + ".jpeg",dpi=(600,600))
+                psimage.save(folder + "\\hdd_" + str(dt) + ".pdf",dpi=(600,600))
+                textFile = open(folder + "\\ram_" + str(dt) + ".txt", "w+")
+                textFile.write(str(diskRead))
+                textFile.write('<sep>')
+                textFile.write(str(diskWrite))
+                textFile.close()
+            except:
+                pass
+
         elif MainGraph.net == True:
-            self.mainGraph.netIOCanvas.postscript(file="C:\\Users\\UnicornRoz\\Desktop\\JPGurileVietii\\test.ps", colormode='color')
+            folder = dir_path + "\\output\\" + str("net_") + str(dt)
+            try:
+                os.mkdir(folder, 0o755)
+            except:
+                pass
+            self.mainGraph.netIOCanvas.postscript(file=folder + "\\net_" + str(dt) + ".ps", colormode='color')
+            psimage = Image.open(folder + "\\net_" + str(dt) + ".ps")
+            psimage.save(folder + "\\net_" + str(dt) + ".jpeg",dpi=(600,600))
+            psimage.save(folder + "\\net_" + str(dt) + ".pdf",dpi=(600,600))
+            textFile = open(folder + "\\ram_" + str(dt) + ".txt", "w+")
+            textFile.write(str(netSent))
+            textFile.write('<sep>')
+            textFile.write(str(netReceived))
+            textFile.close()
+
+
+        self.popup = Tk()
+        self.popup.wm_title("Saved")
+        label = Label(self.popup,text="Image has been saved")
+        label.pack(side="top")
+        ok = Button(self.popup,text="OK",command = self.leave)
+        ok.pack()
+
+        self.popup.mainloop()
+
+    def leave(self):
+        self.popup.destroy()
+        self.open.config(state="normal")
+        self.save.config(state="normal")
+        self.exit.config(state="normal")
+
+        self.cpu.bind("<Button-1>", lambda event: self.showCPU(event, graph=self.graph))
+        self.gpu.bind("<Button-1>", lambda event: self.showGPU(event, graph=self.graph))
+        self.ram.bind("<Button-1>", lambda event: self.showRAM(event, graph=self.graph))
+        self.hdd.bind("<Button-1>", lambda event: self.showHDD(event, graph=self.graph))
+        self.net.bind("<Button-1>", lambda event: self.showNET(event, graph=self.graph))
+
+    def doNothing(self,event):
+        ...
 
     def exit(self):
         sys.exit()

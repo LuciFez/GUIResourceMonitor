@@ -195,8 +195,6 @@ class AppClass:
             self.barCanvas.create_text(120,mainGraphDefaultHeight / (Gui.hddPartitionNumber + 1) * (i + 1), fill="#549401", font="TkDefaultFont 10", text=str(Gui.hddUsed[len(Gui.hddUsed) - 1][i] * 100 / (Gui.hddFree[len(Gui.hddFree) - 1][i] + Gui.hddUsed[len(Gui.hddUsed) - 1][i]))[:5]+ "% used")
             self.barCanvas.create_text(40,mainGraphDefaultHeight / (Gui.hddPartitionNumber + 1) * (i + 1), fill="black", font="TkDefaultFont 12",text=str(partitions[i].device[:1])+":/")
 
-
-
         self.hddThread = threading.Thread(target=MainHDDThread.hddThread, args=(self.barCanvas, self.diskIOPerfect),daemon=True)
         self.hddThread.start()
 
@@ -215,7 +213,6 @@ class AppClass:
 
         self.netThread = threading.Thread(target=MainNETThread.netThread, args=(self.netIOCanvas,), daemon=True)
         self.netThread.start()
-
     def drawMiniCPUsDetails(self, cpu, index):
         cpu.create_text((mainGraphDefaultHeight) - 25, 5, fill="#72B2D6", font="Times 6 italic bold",
                         text=f"CPU {index}")
