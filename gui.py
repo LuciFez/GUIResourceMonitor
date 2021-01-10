@@ -5,6 +5,7 @@ from tkinter import *
 import os
 from PIL import Image
 from datetime import datetime
+import DrawGraph
 
 defaultRootWidth = 734
 defaultRootHeight = 550
@@ -57,7 +58,7 @@ class Gui(Canvas):
         self.menu = LabelFrame(self.root, padx=0, pady=0)
         self.menu.grid(row=0, column=0)
         self.menu.configure(bg="white")
-        self.open = Button(self.menu, text="Open",width=10, padx=0, pady=3)
+        self.open = Button(self.menu, text="Open",width=10, padx=0, pady=3, command=self.open)
         self.open.grid(row=0, column=0)
         self.save = Button(self.menu, text="Save",width=10, padx=0, pady=3, command=self.save)
         self.save.grid(row=0, column=1)
@@ -130,7 +131,6 @@ class Gui(Canvas):
             for widget in graph.winfo_children():
                 widget.destroy()
             self.mainGraph.drawCPUGraph(graph)
-
 
     def showGPU(self, event, graph):
         if self.previousComponent is self.gpu:
@@ -215,7 +215,6 @@ class Gui(Canvas):
             self.mainGraph.drawNETGraph(graph)
 
     def run(self):
-
         drawMiniGraphsDetails(self.cpu, "CPU")
         drawMiniGraphsDetails(self.gpu, "GPU")
         drawMiniGraphsDetails(self.ram, "RAM")
@@ -230,7 +229,6 @@ class Gui(Canvas):
         self.hddThread.start()
         self.netThread = threading.Thread(target=MiniGraph.miniGraphThread, args=(self.net, "NET", [],), daemon=True)
         self.netThread.start()
-
 
         # set the thread at the start of the application to be the CPU one
         MainGraph.cpu = True
@@ -311,7 +309,7 @@ class Gui(Canvas):
                 psimage = Image.open(folder + "\\hdd_" + str(dt) + ".ps")
                 psimage.save(folder + "\\hdd_" + str(dt) + ".jpeg",dpi=(600,600))
                 psimage.save(folder + "\\hdd_" + str(dt) + ".pdf",dpi=(600,600))
-                textFile = open(folder + "\\ram_" + str(dt) + ".txt", "w+")
+                textFile = open(folder + "\\hdd_" + str(dt) + ".txt", "w+")
                 textFile.write(str(diskRead))
                 textFile.write('<sep>')
                 textFile.write(str(diskWrite))
@@ -329,7 +327,7 @@ class Gui(Canvas):
             psimage = Image.open(folder + "\\net_" + str(dt) + ".ps")
             psimage.save(folder + "\\net_" + str(dt) + ".jpeg",dpi=(600,600))
             psimage.save(folder + "\\net_" + str(dt) + ".pdf",dpi=(600,600))
-            textFile = open(folder + "\\ram_" + str(dt) + ".txt", "w+")
+            textFile = open(folder + "\\net_" + str(dt) + ".txt", "w+")
             textFile.write(str(netSent))
             textFile.write('<sep>')
             textFile.write(str(netReceived))
@@ -356,6 +354,52 @@ class Gui(Canvas):
         self.ram.bind("<Button-1>", lambda event: self.showRAM(event, graph=self.graph))
         self.hdd.bind("<Button-1>", lambda event: self.showHDD(event, graph=self.graph))
         self.net.bind("<Button-1>", lambda event: self.showNET(event, graph=self.graph))
+
+    def open(self):
+        self.choice = -1
+        self.open.config(state="disabled")
+        self.save.config(state="disabled")
+        self.exit.config(state="disabled")
+
+        self.cpu.bind("<Button-1>", lambda event: self.doNothing(event))
+        self.gpu.bind("<Button-1>", lambda event: self.doNothing(event))
+        self.ram.bind("<Button-1>", lambda event: self.doNothing(event))
+        self.hdd.bind("<Button-1>", lambda event: self.doNothing(event))
+        self.net.bind("<Button-1>", lambda event: self.doNothing(event))
+
+        self.popup = Tk()
+        self.popup.geometry("300x300")
+        self.popup.wm_title("Graph View")
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+
+        folders = []
+        self.listB = Listbox(self.popup,width = 25, font = "TkDefaultFont 14")
+        i=0
+        for subdir, dirs, files in os.walk(dir_path + "\\output\\"):
+            if len(subdir[subdir.rfind('\\')+1:]) > 1:
+                folders.append(subdir[subdir.rfind('\\')+1:])
+                self.listB.insert(i,subdir[subdir.rfind('\\')+1:])
+                i += 1
+        self.listB.grid(row = 0, column = 0, padx = 10, pady = 10)
+        self.listB.bind("<<ListboxSelect>>", lambda event: self.choose())
+
+        bFrame = LabelFrame(self.popup)
+        bFrame.grid(row=1,column = 0)
+
+        back = Button(bFrame,width = 12, text="back", command=self.leave)
+        back.grid(row=0,column=0)
+        showG = Button(bFrame,width = 12, text="Show Graph", command=self.show)
+        showG.grid(row=0,column=1)
+
+    def choose(self):
+        self.choice = self.listB.get(self.listB.curselection()[0])
+
+    def show(self):
+        if self.choice!=-1:
+            DrawGraph.drawGraph(self.choice)
+            self.leave()
+        else:
+            ...
 
     def doNothing(self,event):
         ...
