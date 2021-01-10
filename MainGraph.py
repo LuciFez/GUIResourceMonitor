@@ -2,11 +2,13 @@ from tkinter import *
 import psutil
 import threading
 import MainCPUThread
+import MainGPUThread
 import MainRAMThread
 import MainHDDThread
 import MainNETThread
 import Gui
 from psutil._common import bytes2human
+import GPUtil
 
 mainGraphDefaultWidth = 600
 mainGraphDefaultHeight = 200
@@ -26,7 +28,7 @@ class AppClass:
         # big graph
         self.mainCPUGraph = Canvas(graph, width=mainGraphDefaultWidth, height=mainGraphDefaultHeight, bg="white",
                                    highlightthickness=1, highlightbackground="#5CA6D0")
-        self.mainCPUGraph.grid(row=0, column=0)
+        self.mainCPUGraph.grid(row=0, column=0,padx=2)
         self.drawGraphDetails(self.mainCPUGraph, "CPU")
 
         # containter mini graphs
@@ -90,8 +92,37 @@ class AppClass:
             Gui.cpuPercentagePerCore), daemon=True)
         self.cpuThread.start()
 
-    def drawGPUGraph(self, graph, text):
-        ...
+    def drawGPUGraph(self, graph):
+        GPUs = GPUtil.getGPUs()
+        if len(GPUs) > 0:
+
+            self.gpuName = Label(graph, text=GPUs[0].name, bg="white", bd=0,font=("TkDefaultFont", 14))
+            self.gpuName.grid(row=0, column=0)
+
+            self.gpuCanvas = Canvas(graph, width=mainGraphDefaultWidth, height=mainGraphDefaultHeight, bg="white",
+                                      highlightthickness=1, highlightbackground="#5CA6D0")
+            self.gpuCanvas.grid(row=1, column=0, padx=2, pady=2)
+
+            self.gpuDetails = LabelFrame(graph, width=mainGraphDefaultWidth, height=mainGraphDefaultHeight,
+                                            bg="white",
+                                            bd=0, highlightthickness=0)
+            self.gpuDetails.grid(row=2, column=0,pady=20)
+
+            self.gpuTM = Label(self.gpuDetails, text="Total memory: "+str(GPUs[0].memoryTotal)+" MB", bg="white", bd=0,anchor='w',font=("TkDefaultFont", 14))
+            self.gpuTM.grid(row=0, column=0,pady=5)
+            self.gpuAM = Label(self.gpuDetails, text="Available memory: "+str(GPUs[0].memoryFree)+" MB", bg="white", bd=0,anchor='w',font=("TkDefaultFont", 14))
+            self.gpuAM.grid(row=1, column=0,pady=5)
+            self.gpuUM = Label(self.gpuDetails, text="Used memory: "+str(GPUs[0].memoryUsed)+" MB", bg="white", bd=0,anchor='w',font=("TkDefaultFont", 14))
+            self.gpuUM.grid(row=2, column=0,pady=5)
+            self.gpuTemp = Label(self.gpuDetails, text="Temperature: "+str(GPUs[0].temperature)+" Celsius", bg="white", bd=0,anchor='w',font=("TkDefaultFont", 14))
+            self.gpuTemp.grid(row=3, column=0,pady=5)
+
+            self.drawGraphDetails(self.gpuCanvas, "GPU")
+
+            self.gpuThread = threading.Thread(target=MainGPUThread.gpuThread, args=(self.gpuCanvas, self.gpuTM, self.gpuAM, self.gpuUM, self.gpuTemp), daemon=True)
+            self.gpuThread.start()
+        else:
+            self.gpuStatus = Label(self.chartRamLabel, text="Buy Nvidia", bg="white", bd=0)
 
     def drawRAMGraph(self, graph):
         # Big Ram Graph

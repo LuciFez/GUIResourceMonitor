@@ -7,6 +7,7 @@ import psutil
 def netThread(netIOCanvas):
     if MainGraph.net == True:
         netIOCanvas.delete("all")
+
         if len(Gui.netReceived) > 1 and len(Gui.netSent)>1:
             diffWriteList = []
             for index in range(0, len(Gui.netReceived) - 1):
@@ -21,6 +22,7 @@ def netThread(netIOCanvas):
                 else:
                     diffReadList.append(Gui.netSent[index + 1] - Gui.netSent[index])
 
+
             i = len(diffWriteList)-1
             positionX = MainGraph.mainGraphDefaultWidth
             while i > 0:
@@ -32,24 +34,32 @@ def netThread(netIOCanvas):
 
                 if i == len(diffWriteList) - 1:
                     if diffWriteList[i] == 1:
-                        netIOCanvas.create_text(MainGraph.mainGraphDefaultWidth - 16,
+                        netIOCanvas.create_text(MainGraph.mainGraphDefaultWidth - 26,
                                                   MainGraph.mainGraphDefaultHeight - 10, fill="black",
-                                                  font="TkDefaultFont 8", text="0.00")
+                                                  font="TkDefaultFont 8", text="0.000000")
                     else:
                         speed = diffWriteList[i] / 1024 / 1024
-                        if max(diffReadList + diffWriteList) / 2 < diffWriteList[i]:
-                            netIOCanvas.create_text(MainGraph.mainGraphDefaultWidth - 16,
-                                                      MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 *
-                                                      diffWriteList[i] * 100 / max(diffReadList + diffWriteList) + 10,
-                                                      fill="black", font="TkDefaultFont 8", text=str(speed)[:4])
+                        if str(speed).find('e') != -1:
+                            netIOCanvas.create_text(MainGraph.mainGraphDefaultWidth - 26,
+                                                    MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 *
+                                                    diffWriteList[i] * 100 / max(diffReadList + diffWriteList) - 10,
+                                                    fill="black", font="TkDefaultFont 8", text="0.000000")
                         else:
-                            netIOCanvas.create_text(MainGraph.mainGraphDefaultWidth - 16,
-                                                      MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 *
-                                                      diffWriteList[i] * 100 / max(diffReadList + diffWriteList) - 10,
-                                                      fill="black", font="TkDefaultFont 8", text=str(speed)[:4])
+                            if max(diffReadList + diffWriteList) / 2 < diffWriteList[i]:
+                                netIOCanvas.create_text(MainGraph.mainGraphDefaultWidth - 26,
+                                                          MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 *
+                                                          diffWriteList[i] * 100 / max(diffReadList + diffWriteList) + 10,
+                                                          fill="black", font="TkDefaultFont 8", text=str(speed)[:8])
+                            else:
+                                netIOCanvas.create_text(MainGraph.mainGraphDefaultWidth - 26,
+                                                          MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 *
+                                                          diffWriteList[i] * 100 / max(diffReadList + diffWriteList) - 10,
+                                                          fill="black", font="TkDefaultFont 8", text=str(speed)[:8])
 
                 positionX -= MainGraph.mainGraphDefaultWidth / 30
                 i -= 1
+
+
             i = len(diffReadList) - 1
             positionX = MainGraph.mainGraphDefaultWidth
             while i > 0:
@@ -61,21 +71,27 @@ def netThread(netIOCanvas):
 
                 if i == len(diffReadList) - 1:
                     if diffReadList[i] == 1:
-                        netIOCanvas.create_text(MainGraph.mainGraphDefaultWidth - 16,
+                        netIOCanvas.create_text(MainGraph.mainGraphDefaultWidth - 26,
                                                   MainGraph.mainGraphDefaultHeight - 10, fill="black",
-                                                  font="TkDefaultFont 8", text="0.00")
+                                                  font="TkDefaultFont 8", text="0.000000")
                     else:
                         speed = diffReadList[i] / 1024 / 1024
-                        if max(diffReadList + diffWriteList) / 2 < diffReadList[i]:
-                            netIOCanvas.create_text(MainGraph.mainGraphDefaultWidth - 16,
-                                                      MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 *
-                                                      diffReadList[i] * 100 / max(diffReadList + diffWriteList) + 10,
-                                                      fill="black", font="TkDefaultFont 8", text=str(speed)[:4])
+                        if str(speed).find('e') != -1:
+                            netIOCanvas.create_text(MainGraph.mainGraphDefaultWidth - 26,
+                                                    MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 *
+                                                    diffWriteList[i] * 100 / max(diffReadList + diffWriteList) - 10,
+                                                    fill="black", font="TkDefaultFont 8", text="0.000000")
                         else:
-                            netIOCanvas.create_text(MainGraph.mainGraphDefaultWidth - 16,
-                                                      MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 *
-                                                      diffReadList[i] * 100 / max(diffReadList + diffWriteList) - 10,
-                                                      fill="black", font="TkDefaultFont 8", text=str(speed)[:4])
+                            if max(diffReadList + diffWriteList) / 2 < diffReadList[i]:
+                                netIOCanvas.create_text(MainGraph.mainGraphDefaultWidth - 26,
+                                                          MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 *
+                                                          diffReadList[i] * 100 / max(diffReadList + diffWriteList) + 10,
+                                                          fill="black", font="TkDefaultFont 8", text=str(speed)[:8])
+                            else:
+                                netIOCanvas.create_text(MainGraph.mainGraphDefaultWidth - 26,
+                                                          MainGraph.mainGraphDefaultHeight - MainGraph.mainGraphDefaultHeight / 100 *
+                                                          diffReadList[i] * 100 / max(diffReadList + diffWriteList) - 10,
+                                                          fill="black", font="TkDefaultFont 8", text=str(speed)[:8])
 
                 positionX -= MainGraph.mainGraphDefaultWidth / 30
                 i -= 1

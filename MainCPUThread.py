@@ -6,6 +6,7 @@ import psutil
 
 def cpuThread(mainGraphCanvas, miniCPUsCanvasList, fullSpeedCPULabel, eachCoreLabelList, speedList, speedListPerCPU):
     if MainGraph.cpu == True:
+
         """
         for checking threads
         print(speedList)
@@ -32,7 +33,6 @@ def cpuThread(mainGraphCanvas, miniCPUsCanvasList, fullSpeedCPULabel, eachCoreLa
                                             speedList[i - 1],
                                             fill='#549401', width=2)
                 positionX -= MainGraph.mainGraphDefaultWidth / 30
-
                 i -= 1
 
         for miniCPU in miniCPUsCanvasList:

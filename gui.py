@@ -2,6 +2,7 @@ import threading
 import MainGraph
 import MiniGraph
 from tkinter import *
+from PIL import ImageGrab
 
 defaultRootWidth = 734
 defaultRootHeight = 550
@@ -56,7 +57,7 @@ class Gui(Canvas):
         self.menu.configure(bg="white")
         self.open = Button(self.menu, text="Open",width=10, padx=0, pady=3)
         self.open.grid(row=0, column=0)
-        self.save = Button(self.menu, text="Save",width=10, padx=0, pady=3)
+        self.save = Button(self.menu, text="Save",width=10, padx=0, pady=3, command=self.save)
         self.save.grid(row=0, column=1)
         self.exit = Button(self.menu, text="Exit",width=10, padx=0, pady=3, command=self.exit)
         self.exit.grid(row=0, column=2)
@@ -146,7 +147,7 @@ class Gui(Canvas):
             self.previousComponent = self.gpu
             for widget in graph.winfo_children():
                 widget.destroy()
-            self.mainGraph.drawCPUGraph(graph)
+            self.mainGraph.drawGPUGraph(graph)
 
     def showRAM(self, event, graph):
         if self.previousComponent is self.ram:
@@ -227,6 +228,7 @@ class Gui(Canvas):
         self.netThread = threading.Thread(target=MiniGraph.miniGraphThread, args=(self.net, "NET", [],), daemon=True)
         self.netThread.start()
 
+
         # set the thread at the start of the application to be the CPU one
         MainGraph.cpu = True
         MainGraph.gpu = False
@@ -237,7 +239,26 @@ class Gui(Canvas):
         self.cpu.configure(highlightthickness=2, highlightbackground="#AD58C6")
         self.mainGraph = MainGraph.AppClass(self.graph)
 
+
         self.root.mainloop()
+
+    def save(self):
+        if MainGraph.cpu == True:
+            x = self.root.winfo_rootx() + self.mainGraph.mainCPUGraph.winfo_x()
+            y = self.root.winfo_rooty() + self.mainGraph.mainCPUGraph.winfo_y()
+            x1 = x + self.mainGraph.mainCPUGraph.winfo_width()
+            y1 = y + self.mainGraph.mainCPUGraph.winfo_height()
+            ImageGrab.grab().crop((x, y, x1, y1)).save("C:\\Users\\UnicornRoz\\Desktop\\JPGurileVietii\\test.png")
+            img = PhotoImage(file="C:\\Users\\UnicornRoz\\Desktop\\JPGurileVietii\\test1.png")
+            self.mainGraph.mainCPUGraph.create_image(self.mainGraph.mainCPUGraph.winfo_x(), self.mainGraph.mainCPUGraph.winfo_y(), image=img)
+        elif MainGraph.gpu == True:
+            self.mainGraph.gpuCanvas.postscript(file="C:\\Users\\UnicornRoz\\Desktop\\JPGurileVietii\\test.ps", colormode='color')
+        elif MainGraph.ram == True:
+            self.mainGraph.mainRAMGraph.postscript(file="C:\\Users\\UnicornRoz\\Desktop\\JPGurileVietii\\test.ps", colormode='color')
+        elif MainGraph.hdd == True:
+            self.mainGraph.diskIOPerfect.postscript(file="C:\\Users\\UnicornRoz\\Desktop\\JPGurileVietii\\test.ps", colormode='color')
+        elif MainGraph.net == True:
+            self.mainGraph.netIOCanvas.postscript(file="C:\\Users\\UnicornRoz\\Desktop\\JPGurileVietii\\test.ps", colormode='color')
 
     def exit(self):
         sys.exit()
