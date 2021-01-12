@@ -12,9 +12,11 @@ def miniGraphThread(graph, component, miniGraphUsageList):
         Gui.cpuPercentage = miniGraphUsageList
     elif component == "GPU":
         GPUs = GPUtil.getGPUs()
+        # if there is a nvidia GPU installed
         if len(GPUs) > 0:
             Gui.gpuManufacturer = True
             Gui.gpuPercentage.append(GPUs[0].memoryUtil * 100)
+
     elif component == "RAM":
         miniGraphUsageList.append(psutil.virtual_memory().percent)
         Gui.ramPercentage.append(psutil.virtual_memory().percent)
@@ -147,7 +149,8 @@ def miniGraphThread(graph, component, miniGraphUsageList):
                     positionX -= Gui.miniGraphDefaultWidth / 30
                     i -= 1
         else:
-            graph.create_text(Gui.miniGraphDefaultWidth/2-30,Gui.miniGraphDefaultHeight/2, fill="#72B2D6", font="Times 8 italic bold",text="Buy Nvidia")
+            graph.delete("all")
+            graph.create_text(Gui.miniGraphDefaultWidth/2,Gui.miniGraphDefaultHeight/2, fill="#72B2D6", font="Times 8 italic bold",text="Buy Nvidia")
     else:
         if len(miniGraphUsageList) > 1:
             i = len(miniGraphUsageList) - 1
@@ -165,6 +168,8 @@ def miniGraphThread(graph, component, miniGraphUsageList):
 
     time.sleep(1)
     graph.delete("all")
-    if component in {"CPU","GPU","RAM"}:
+    if component in {"CPU","RAM"}:
+        Gui.drawMiniGraphsDetails(graph, component)
+    elif component=="GPU" and Gui.gpuManufacturer==True:
         Gui.drawMiniGraphsDetails(graph, component)
     miniGraphThread(graph, component, miniGraphUsageList)

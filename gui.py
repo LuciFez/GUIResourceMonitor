@@ -7,33 +7,40 @@ from PIL import Image
 from datetime import datetime
 import DrawGraph
 
+#root dimensions
 defaultRootWidth = 734
 defaultRootHeight = 550
 
+#mini graphs on the left side dimensions
 miniGraphDefaultWidth = 120
 miniGraphDefaultHeight = 100
 
+#cpu data colledted
 cpuPercentage = []
 cpuPercentagePerCore = []
 
+#gpu data colledted
 gpuPercentage = []
 gpuManufacturer = False
 
+#ram data colledted
 ramPercentage = []
 ramAvailable = []
 ramUsed = []
 
+#disk data colledted
 hddPartitionNumber = -1
 diskRead = []
 diskWrite = []
 hddUsed = []
 hddFree = []
 
+#net data colledted
 netPercentage = []
 netSent = []
 netReceived = []
 
-
+#function for drawing the details of the left side mini graphs
 def drawMiniGraphsDetails(miniGraph, component):
     miniGraph.create_text(miniGraphDefaultWidth - 10, 6, fill="#72B2D6", font="Times 6 italic bold",
                           text=str(component))
@@ -45,19 +52,26 @@ def drawMiniGraphsDetails(miniGraph, component):
                                   text=str(int(100 - positionY / miniGraphDefaultHeight * 100)))
         positionY += miniGraphDefaultHeight / 10
 
+#gui class
 class Gui(Canvas):
-
+    #initialization
     def __init__(self):
+        # root declaration
         self.root = Tk()
+        #root title
         self.root.title("GUI Resource Monitor")
+        #root dimentions
         self.root.geometry(f"{defaultRootWidth}x{defaultRootHeight}")
+        #root background
         self.root.configure(bg="white")
+        #setting root unresizable
         self.root.resizable(False, False)
 
-        # menu
+        # menu frame
         self.menu = LabelFrame(self.root, padx=0, pady=0)
         self.menu.grid(row=0, column=0)
         self.menu.configure(bg="white")
+        #menu buttons declaration
         self.open = Button(self.menu, text="Open",width=10, padx=0, pady=3, command=self.open)
         self.open.grid(row=0, column=0)
         self.save = Button(self.menu, text="Save",width=10, padx=0, pady=3, command=self.save)
@@ -65,46 +79,37 @@ class Gui(Canvas):
         self.exit = Button(self.menu, text="Exit",width=10, padx=0, pady=3, command=self.exit)
         self.exit.grid(row=0, column=2)
 
-        # app
+        # app body frame
         self.app = LabelFrame(self.root, padx=0, pady=0)
         self.app.grid(row=1, column=0, padx=0, pady=0)
         self.app.configure(bg="white")
 
-        # app mini graphs
+        # app mini graphs frame
         self.miniGraphs = LabelFrame(self.app, padx=0, pady=0, bd=0, highlightthickness=0)
         self.miniGraphs.grid(row=0, column=0, padx=0, pady=0)
         self.miniGraphs.configure(bg="white")
-
-        self.cpu = Canvas(self.miniGraphs, width=miniGraphDefaultWidth, height=miniGraphDefaultHeight, bg="white",
-                          highlightthickness=1, highlightbackground="#5CA6D0")
+        # app mini graphs declaration
+        self.cpu = Canvas(self.miniGraphs, width=miniGraphDefaultWidth, height=miniGraphDefaultHeight, bg="white",highlightthickness=1, highlightbackground="#5CA6D0")
         self.cpu.grid(row=0, column=1)
-
-        self.gpu = Canvas(self.miniGraphs, width=miniGraphDefaultWidth, height=miniGraphDefaultHeight, bg="white",
-                          highlightthickness=1, highlightbackground="#5CA6D0")
+        self.gpu = Canvas(self.miniGraphs, width=miniGraphDefaultWidth, height=miniGraphDefaultHeight, bg="white",highlightthickness=1, highlightbackground="#5CA6D0")
         self.gpu.grid(row=1, column=1)
-
-        self.ram = Canvas(self.miniGraphs, width=miniGraphDefaultWidth, height=miniGraphDefaultHeight, bg="white",
-                          highlightthickness=1, highlightbackground="#5CA6D0")
+        self.ram = Canvas(self.miniGraphs, width=miniGraphDefaultWidth, height=miniGraphDefaultHeight, bg="white",highlightthickness=1, highlightbackground="#5CA6D0")
         self.ram.grid(row=2, column=1)
-
-        self.hdd = Canvas(self.miniGraphs, width=miniGraphDefaultWidth, height=miniGraphDefaultHeight, bg="white",
-                          highlightthickness=1, highlightbackground="#5CA6D0")
+        self.hdd = Canvas(self.miniGraphs, width=miniGraphDefaultWidth, height=miniGraphDefaultHeight, bg="white",highlightthickness=1, highlightbackground="#5CA6D0")
         self.hdd.grid(row=3, column=1)
-
-        self.net = Canvas(self.miniGraphs, width=miniGraphDefaultWidth, height=miniGraphDefaultHeight, bg="white",
-                          highlightthickness=1, highlightbackground="#5CA6D0")
+        self.net = Canvas(self.miniGraphs, width=miniGraphDefaultWidth, height=miniGraphDefaultHeight, bg="white",highlightthickness=1, highlightbackground="#5CA6D0")
         self.net.grid(row=4, column=1)
-
+        #app mini graphs binding
         self.cpu.bind("<Button-1>", lambda event: self.showCPU(event, graph=self.graph))
         self.gpu.bind("<Button-1>", lambda event: self.showGPU(event, graph=self.graph))
         self.ram.bind("<Button-1>", lambda event: self.showRAM(event, graph=self.graph))
         self.hdd.bind("<Button-1>", lambda event: self.showHDD(event, graph=self.graph))
         self.net.bind("<Button-1>", lambda event: self.showNET(event, graph=self.graph))
 
-        # app main Graph
+        # app main graph frame
         self.graph = LabelFrame(self.app, padx=0, pady=0, bd=0, highlightthickness=0, bg="white")
         self.graph.grid(row=0, column=1, padx=0, pady=0)
-
+        #update the components for the TK
         self.root.update()
         self.cpu.update()
         self.gpu.update()
@@ -215,10 +220,11 @@ class Gui(Canvas):
             self.mainGraph.drawNETGraph(graph)
 
     def run(self):
+        #draw details on mini graphs
         drawMiniGraphsDetails(self.cpu, "CPU")
         drawMiniGraphsDetails(self.gpu, "GPU")
         drawMiniGraphsDetails(self.ram, "RAM")
-
+        #start a thread to collect data each second for each component
         self.cpuThread = threading.Thread(target=MiniGraph.miniGraphThread, args=(self.cpu, "CPU", [],), daemon=True)
         self.cpuThread.start()
         self.gpuThread = threading.Thread(target=MiniGraph.miniGraphThread, args=(self.gpu, "GPU", [],), daemon=True)
@@ -230,16 +236,19 @@ class Gui(Canvas):
         self.netThread = threading.Thread(target=MiniGraph.miniGraphThread, args=(self.net, "NET", [],), daemon=True)
         self.netThread.start()
 
-        # set the thread at the start of the application to be the CPU one
+        # set the initial displayed component to be the CPU
         MainGraph.cpu = True
         MainGraph.gpu = False
         MainGraph.ram = False
         MainGraph.hdd = False
         MainGraph.net = False
+        #set the previous component to be the CPU
         self.previousComponent = self.cpu
+        #set indicator for current displayed component (CPU initial)
         self.cpu.configure(highlightthickness=2, highlightbackground="#AD58C6")
-        self.mainGraph = MainGraph.AppClass(self.graph)
 
+        #create the main graph object
+        self.mainGraph = MainGraph.AppClass(self.graph)
         self.root.mainloop()
 
     def save(self):
