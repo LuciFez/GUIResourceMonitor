@@ -256,4 +256,13 @@ def drawSmartGraph(read,write,canvas,component,folder):
 
 def leave(parent,drawing):
     parent.leave()
+    parent.open.config(state="normal")
+    parent.save.config(state="normal")
+    parent.exit.config(state="normal")
+    # mapps the canvas to the corresponding click function
+    parent.cpu.bind("<Button-1>", lambda event: parent.showCPU(event, graph=parent.graph))
+    parent.gpu.bind("<Button-1>", lambda event: parent.showGPU(event, graph=parent.graph))
+    parent.ram.bind("<Button-1>", lambda event: parent.showRAM(event, graph=parent.graph))
+    parent.hdd.bind("<Button-1>", lambda event: parent.showHDD(event, graph=parent.graph))
+    parent.net.bind("<Button-1>", lambda event: parent.showNET(event, graph=parent.graph))
     drawing.destroy()

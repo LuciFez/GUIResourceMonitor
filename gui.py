@@ -429,11 +429,11 @@ class Gui(Canvas):
         bFrame = LabelFrame(self.popup,bg='white',highlightthickness=0,bd=0)
         bFrame.grid(row=1,column = 0)
         #back button
-        back = Button(bFrame,width = 12, text="back", command=self.leave)
-        back.grid(row=0,column=0)
+        self.back = Button(bFrame,width = 12, text="back", command=self.leave)
+        self.back.grid(row=0,column=0)
         #show button
-        showG = Button(bFrame,width = 12, text="Show Graph", command=self.show)
-        showG.grid(row=0,column=1)
+        self.showG = Button(bFrame,width = 12, text="Show Graph", command=self.show)
+        self.showG.grid(row=0,column=1)
 
     #choose the clicked graph
     def choose(self):
@@ -442,6 +442,9 @@ class Gui(Canvas):
     #if the choise is correct then show the graph
     def show(self):
         if self.choice!=-1:
+            self.back.config(state="disabled")
+            self.showG.config(state="disabled")
+            self.listB.bind("<<ListboxSelect>>", lambda event: self.doNothing())
             DrawGraph.drawGraph(self.choice,self)
             self.leave()
 
