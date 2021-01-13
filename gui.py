@@ -251,37 +251,48 @@ class Gui(Canvas):
         self.mainGraph = MainGraph.AppClass(self.graph)
         self.root.mainloop()
 
+    #save the files
     def save(self):
-
+        #disable button while saving
         self.open.config(state="disabled")
         self.save.config(state="disabled")
         self.exit.config(state="disabled")
-
+        #disable canvas clicking
         self.cpu.bind("<Button-1>", lambda event: self.doNothing(event))
         self.gpu.bind("<Button-1>", lambda event: self.doNothing(event))
         self.ram.bind("<Button-1>", lambda event: self.doNothing(event))
         self.hdd.bind("<Button-1>", lambda event: self.doNothing(event))
         self.net.bind("<Button-1>", lambda event: self.doNothing(event))
-
+        #get current date
         now = datetime.now()
         dt = now.strftime("%Y-%m-%dT%H%M%S")
-
+        #get working directory
         dir_path = os.path.dirname(os.path.realpath(__file__))
-
+        #if the current component is CPU
         if MainGraph.cpu == True:
+            #create folder for current saving
             folder = dir_path + "\\output\\" + str("cpu_") + str(dt)
             try:
+                #make directory for save
                 os.mkdir(folder, 0o755)
+                #create post script for main graph
                 self.mainGraph.mainCPUGraph.postscript(file=folder + "\\cpu_" + str(dt) + ".ps", colormode='color')
+                #open an image as post script
                 psimage = Image.open(folder + "\\cpu_" + str(dt) + ".ps")
+                #save image as .jpeg
                 psimage.save(folder + "\\cpu_" + str(dt) + ".jpeg",dpi=(600,600))
+                #save image as .pdf
                 psimage.save(folder + "\\cpu_" + str(dt) + ".pdf",dpi=(600,600))
+                #create file for graph percent writing
                 textFile = open(folder + "\\cpu_" + str(dt) + ".txt", "w+")
+                #writes the usage
                 textFile.write(str(cpuPercentage))
+                #close the file
                 textFile.close()
             except:
                 pass
 
+        #if the current component is GPU
         elif MainGraph.gpu == True:
             folder = dir_path + "\\output\\" + str("gpu_") + str(dt)
             try:
@@ -296,6 +307,7 @@ class Gui(Canvas):
             except:
                 pass
 
+        #if the current component is RAM
         elif MainGraph.ram == True:
             folder = dir_path + "\\output\\" + str("ram_") + str(dt)
             try:
@@ -310,6 +322,7 @@ class Gui(Canvas):
             except:
                 pass
 
+        #if the current component is HDD
         elif MainGraph.hdd == True:
             folder = dir_path + "\\output\\" + str("hdd_") + str(dt)
             try:
@@ -326,6 +339,7 @@ class Gui(Canvas):
             except:
                 pass
 
+        #if the current component is NET
         elif MainGraph.net == True:
             folder = dir_path + "\\output\\" + str("net_") + str(dt)
             try:
@@ -342,77 +356,99 @@ class Gui(Canvas):
             textFile.write(str(netReceived))
             textFile.close()
 
-
+        #popup shown
         self.popup = Tk()
+        #set title
         self.popup.wm_title("Saved")
-        label = Label(self.popup,text="Image has been saved")
+        self.popup.resizable(False,False)
+        self.popup.config(bg='white')
+        #add text
+        label = Label(self.popup,text="Image has been saved",bg='white')
+        #pack
         label.pack(side="top")
+        #button for confirmation, mapped to leave function
         ok = Button(self.popup,text="OK",command = self.leave)
         ok.pack()
-
+        #main loop
         self.popup.mainloop()
 
+    #releases the locks on the buttons and cavas
     def leave(self):
-        self.popup.destroy()
-        self.open.config(state="normal")
-        self.save.config(state="normal")
-        self.exit.config(state="normal")
-
-        self.cpu.bind("<Button-1>", lambda event: self.showCPU(event, graph=self.graph))
-        self.gpu.bind("<Button-1>", lambda event: self.showGPU(event, graph=self.graph))
-        self.ram.bind("<Button-1>", lambda event: self.showRAM(event, graph=self.graph))
-        self.hdd.bind("<Button-1>", lambda event: self.showHDD(event, graph=self.graph))
-        self.net.bind("<Button-1>", lambda event: self.showNET(event, graph=self.graph))
-
+        #deletes the popup
+        try:
+            self.popup.destroy()
+            #trun on the buttons
+            self.open.config(state="normal")
+            self.save.config(state="normal")
+            self.exit.config(state="normal")
+            #mapps the canvas to the corresponding click function
+            self.cpu.bind("<Button-1>", lambda event: self.showCPU(event, graph=self.graph))
+            self.gpu.bind("<Button-1>", lambda event: self.showGPU(event, graph=self.graph))
+            self.ram.bind("<Button-1>", lambda event: self.showRAM(event, graph=self.graph))
+            self.hdd.bind("<Button-1>", lambda event: self.showHDD(event, graph=self.graph))
+            self.net.bind("<Button-1>", lambda event: self.showNET(event, graph=self.graph))
+        except:
+            pass
+    #open graph
     def open(self):
+        #choice from list
         self.choice = -1
+        #turn off the buttons
         self.open.config(state="disabled")
         self.save.config(state="disabled")
         self.exit.config(state="disabled")
-
+        #unmapp the canvas
         self.cpu.bind("<Button-1>", lambda event: self.doNothing(event))
         self.gpu.bind("<Button-1>", lambda event: self.doNothing(event))
         self.ram.bind("<Button-1>", lambda event: self.doNothing(event))
         self.hdd.bind("<Button-1>", lambda event: self.doNothing(event))
         self.net.bind("<Button-1>", lambda event: self.doNothing(event))
-
+        #popup
         self.popup = Tk()
         self.popup.geometry("300x300")
         self.popup.wm_title("Graph View")
+        self.popup.config(bg='white')
+        #dir path
         dir_path = os.path.dirname(os.path.realpath(__file__))
 
+        #search in the output folder
         folders = []
-        self.listB = Listbox(self.popup,width = 25, font = "TkDefaultFont 14")
+        self.listB = Listbox(self.popup,width = 25, font = "TkDefaultFont 14",bg='white',highlightthickness=0)
         i=0
         for subdir, dirs, files in os.walk(dir_path + "\\output\\"):
+            #ignore the current folder
             if len(subdir[subdir.rfind('\\')+1:]) > 1:
                 folders.append(subdir[subdir.rfind('\\')+1:])
                 self.listB.insert(i,subdir[subdir.rfind('\\')+1:])
                 i += 1
+        #add list view
         self.listB.grid(row = 0, column = 0, padx = 10, pady = 10)
+        #bind to choose function
         self.listB.bind("<<ListboxSelect>>", lambda event: self.choose())
-
-        bFrame = LabelFrame(self.popup)
+        #label frame for buttons
+        bFrame = LabelFrame(self.popup,bg='white',highlightthickness=0,bd=0)
         bFrame.grid(row=1,column = 0)
-
+        #back button
         back = Button(bFrame,width = 12, text="back", command=self.leave)
         back.grid(row=0,column=0)
+        #show button
         showG = Button(bFrame,width = 12, text="Show Graph", command=self.show)
         showG.grid(row=0,column=1)
 
+    #choose the clicked graph
     def choose(self):
         self.choice = self.listB.get(self.listB.curselection()[0])
 
+    #if the choise is correct then show the graph
     def show(self):
         if self.choice!=-1:
-            DrawGraph.drawGraph(self.choice)
+            DrawGraph.drawGraph(self.choice,self)
             self.leave()
-        else:
-            ...
 
+    #unmapping function for off canvas
     def doNothing(self,event):
         ...
 
+    #exit app function
     def exit(self):
         sys.exit()
-

@@ -65,8 +65,10 @@ def hddThread(barCanvas,diskIOPerfect):
                     diffWriteList = []
                     #itearate the bytes written by the system
                     for index in range(0, len(Gui.diskWrite) - 1):
+                        if index==0:
+                            diffWriteList.append(1)
                         #if there is no byte written between the previous second and the current one
-                        if Gui.diskWrite[index + 1][0] - Gui.diskWrite[index][0] == 0:
+                        elif Gui.diskWrite[index + 1][0] - Gui.diskWrite[index][0] == 0:
                             #assign 1
                             diffWriteList.append(1)
                         else:
@@ -77,6 +79,8 @@ def hddThread(barCanvas,diskIOPerfect):
                     diffReadList = []
                     #itearate the bytes read by the system
                     for index in range(0, len(Gui.diskRead) - 1):
+                        if index==0:
+                            diffReadList.append(1)
                         #if there is no byte read between the previous second and the current one
                         if Gui.diskRead[index + 1][0] - Gui.diskRead[index][0] == 0:
                             #assign 1

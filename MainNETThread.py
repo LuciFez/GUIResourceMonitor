@@ -17,8 +17,10 @@ def netThread(netIOCanvas):
                 diffWriteList = []
                 #itearate the bytes received by the system
                 for index in range(0, len(Gui.netReceived) - 1):
-                    #if there is no byte received between the previous second and the current one
-                    if Gui.netReceived[index+1] - Gui.netReceived[index] == 0:
+                    if index == 0:
+                        diffWriteList.append(1)
+                    # if there is no byte sent between the previous second and the current one
+                    elif Gui.netReceived[index+1] - Gui.netReceived[index] == 0:
                         #assign 1
                         diffWriteList.append(1)
                     else:
@@ -28,8 +30,10 @@ def netThread(netIOCanvas):
                 diffReadList = []
                 # itearate the bytes sent by the system
                 for index in range(0, len(Gui.netSent) - 1):
+                    if index ==0:
+                        diffReadList.append(1)
                     # if there is no byte sent between the previous second and the current one
-                    if Gui.netSent[index + 1] - Gui.netSent[index] == 0:
+                    elif Gui.netSent[index + 1] - Gui.netSent[index] == 0:
                         # assign 1
                         diffReadList.append(1)
                     else:

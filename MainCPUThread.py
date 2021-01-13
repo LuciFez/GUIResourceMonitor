@@ -2,6 +2,7 @@ import time
 import MainGraph
 import psutil
 import Gui
+import threading
 
 
 def cpuThread(mainGraphCanvas, miniCPUsCanvasList, fullSpeedCPULabel, eachCoreLabelList):
@@ -9,8 +10,6 @@ def cpuThread(mainGraphCanvas, miniCPUsCanvasList, fullSpeedCPULabel, eachCoreLa
     if MainGraph.cpu == True:
 
         """
-        for checking threads
-        print(speedList)
         for thread in threading.enumerate():
             print(thread.name)
         """

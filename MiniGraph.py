@@ -59,14 +59,18 @@ def miniGraphThread(graph, component, miniGraphUsageList):
         if len(Gui.diskWrite) > 1 and len(Gui.diskRead) > 1:
             diffWriteList = []
             for index in range(0,len(Gui.diskWrite)-1):
-                if Gui.diskWrite[index+1][0]-Gui.diskWrite[index][0]==0:
+                if index == 0:
+                    diffWriteList.append(1)
+                elif Gui.diskWrite[index+1][0]-Gui.diskWrite[index][0]==0:
                     diffWriteList.append(1)
                 else:
                     diffWriteList.append(Gui.diskWrite[index+1][0]-Gui.diskWrite[index][0])
 
             diffReadList = []
             for index in range(0, len(Gui.diskRead) - 1):
-                if Gui.diskRead[index+1][0]-Gui.diskRead[index][0]==0:
+                if index == 0:
+                    diffReadList.append(1)
+                elif Gui.diskRead[index+1][0]-Gui.diskRead[index][0]==0:
                     diffReadList.append(1)
                 else:
                     diffReadList.append(Gui.diskRead[index + 1][0] - Gui.diskRead[index][0])
@@ -99,13 +103,17 @@ def miniGraphThread(graph, component, miniGraphUsageList):
         if len(Gui.netReceived) > 1 and len(Gui.netSent)>1:
             diffWriteList = []
             for index in range(0, len(Gui.netReceived) - 1):
-                if Gui.netReceived[index+1] - Gui.netReceived[index] == 0:
+                if index == 0:
+                    diffWriteList.append(1)
+                elif Gui.netReceived[index+1] - Gui.netReceived[index] == 0:
                     diffWriteList.append(1)
                 else:
                     diffWriteList.append(Gui.netReceived[index + 1] - Gui.netReceived[index])
             diffReadList = []
             for index in range(0, len(Gui.netSent) - 1):
-                if Gui.netSent[index + 1] - Gui.netSent[index] == 0:
+                if index == 0:
+                    diffReadList.append(1)
+                elif Gui.netSent[index + 1] - Gui.netSent[index] == 0:
                     diffReadList.append(1)
                 else:
                     diffReadList.append(Gui.netSent[index + 1] - Gui.netSent[index])
