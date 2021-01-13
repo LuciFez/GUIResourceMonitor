@@ -98,7 +98,7 @@ def drawHDD(folder,canvas):
         else:
             finalRead.append(read[i] - read[i - 1])
     finalWrite = []
-    for i in range(0, len(finalWrite)):
+    for i in range(0, len(write)):
         if i == 0:
             finalWrite.append(1)
         elif write[i] == write[i - 1]:
@@ -133,7 +133,7 @@ def drawNET(folder,canvas):
         else:
             finalRead.append(read[i] - read[i-1])
     finalWrite = []
-    for i in range(0, len(finalWrite)):
+    for i in range(0, len(write)):
         if i == 0:
             finalWrite.append(1)
         elif write[i] == write[i - 1]:
@@ -141,7 +141,7 @@ def drawNET(folder,canvas):
         else:
             finalWrite.append(write[i] - write[i - 1])
 
-    drawSmartGraph(finalRead,finalWrite,canvas,"NET",folder)
+    drawSmartGraph(finalWrite,finalRead,canvas,"NET",folder)
 
 def drawPercentage(li,canvas,component,folder):
     canvas.create_text(1240 - 60, 20, fill="#72B2D6", font="Times 16 italic bold",
@@ -189,8 +189,6 @@ def drawPercentage(li,canvas,component,folder):
     canvas.create_text(30, 610, fill='black', text=str(diff)[len(str(diff))-8:])
 
 def drawSmartGraph(read,write,canvas,component,folder):
-    canvas.create_text(1240 - 60, 20, fill="#72B2D6", font="Times 16 italic bold",
-                       text=f"{component} Usage")
 
     i = len(read) - 1
     positionX = 1240
@@ -247,9 +245,14 @@ def drawSmartGraph(read,write,canvas,component,folder):
         str(folder[len(folder) - 6:len(folder) - 4]) + ":" + str(folder[len(folder) - 4:len(folder) - 2]) + ":" + str(
             folder[len(folder) - 2:]), '%H:%M:%S') - datetime.timedelta(seconds=int(len(read) - 1))
 
-    canvas.create_text(1100, 20, fill='black', text=str(folder[len(folder) - 6:len(folder) - 4]) + ":" + str(
+    canvas.create_text(1210, 20, fill='black', text=str(folder[len(folder) - 6:len(folder) - 4]) + ":" + str(
         folder[len(folder) - 4:len(folder) - 2]) + ":" + str(folder[len(folder) - 2:]))
     canvas.create_text(30, 20, fill='black', text=str(diff)[len(str(diff)) - 8:])
+    canvas.create_text(37, 40, fill='blue', text="MBps read")
+    canvas.create_text(44, 60, fill='#549401', text="MBps written")
+
+    canvas.create_text(1100, 20, fill="#72B2D6", font="Times 16 italic bold",
+                       text=f"{component} Usage")
 
 def leave(parent,drawing):
     parent.leave()
