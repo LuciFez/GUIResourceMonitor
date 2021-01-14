@@ -170,7 +170,7 @@ def miniGraphThread(graph, component, miniGraphUsageList):
                                       positionX - Gui.miniGraphDefaultWidth / 30,
                                       Gui.miniGraphDefaultHeight - Gui.miniGraphDefaultHeight / 100 *
                                       Gui.gpuPercentage[i - 1],
-                                      fill='#549401', width=2)
+                                      fill='red', width=2)
                     positionX -= Gui.miniGraphDefaultWidth / 30
                     i -= 1
         else:
@@ -189,7 +189,7 @@ def miniGraphThread(graph, component, miniGraphUsageList):
                                   positionX - Gui.miniGraphDefaultWidth / 30,
                                   Gui.miniGraphDefaultHeight - Gui.miniGraphDefaultHeight / 100 * miniGraphUsageList[
                                       i - 1],
-                                  fill='#549401', width=2)
+                                  fill='red', width=2)
                 positionX -= Gui.miniGraphDefaultWidth / 30
                 i -= 1
 
